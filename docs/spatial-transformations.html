@@ -1,0 +1,1221 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>12.3 Spatial Transformations | An Introduction to Spatial Data Science with GeoDa</title>
+  <meta name="description" content="GeoDa1" />
+  <meta name="generator" content="bookdown 0.33 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="12.3 Spatial Transformations | An Introduction to Spatial Data Science with GeoDa" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="GeoDa1" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="12.3 Spatial Transformations | An Introduction to Spatial Data Science with GeoDa" />
+  
+  <meta name="twitter:description" content="GeoDa1" />
+  
+
+<meta name="author" content="Luc Anselin" />
+
+
+<meta name="date" content="2023-08-18" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="spatial-weights-as-distance-functions.html"/>
+<link rel="next" href="spatialratesmoothing.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="css/style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">An Introduction to Spatial Data Science - Vol 1</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a>
+<ul>
+<li class="chapter" data-level="" data-path="acknowledgments.html"><a href="acknowledgments.html"><i class="fa fa-check"></i>Acknowledgments</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="about-the-author.html"><a href="about-the-author.html"><i class="fa fa-check"></i>About the Author</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="overview-of-volume-1.html"><a href="overview-of-volume-1.html"><i class="fa fa-check"></i><b>1.1</b> Overview of Volume 1</a></li>
+<li class="chapter" data-level="1.2" data-path="a-quick-tour-of-geoda.html"><a href="a-quick-tour-of-geoda.html"><i class="fa fa-check"></i><b>1.2</b> A Quick Tour of GeoDa</a>
+<ul>
+<li class="chapter" data-level="1.2.1" data-path="a-quick-tour-of-geoda.html"><a href="a-quick-tour-of-geoda.html#data-entry"><i class="fa fa-check"></i><b>1.2.1</b> Data Entry</a></li>
+<li class="chapter" data-level="1.2.2" data-path="a-quick-tour-of-geoda.html"><a href="a-quick-tour-of-geoda.html#data-manipulation"><i class="fa fa-check"></i><b>1.2.2</b> Data Manipulation</a></li>
+<li class="chapter" data-level="1.2.3" data-path="a-quick-tour-of-geoda.html"><a href="a-quick-tour-of-geoda.html#gis-operations"><i class="fa fa-check"></i><b>1.2.3</b> GIS Operations</a></li>
+<li class="chapter" data-level="1.2.4" data-path="a-quick-tour-of-geoda.html"><a href="a-quick-tour-of-geoda.html#weights-manager"><i class="fa fa-check"></i><b>1.2.4</b> Weights Manager</a></li>
+<li class="chapter" data-level="1.2.5" data-path="a-quick-tour-of-geoda.html"><a href="a-quick-tour-of-geoda.html#mapping-and-geovisualization"><i class="fa fa-check"></i><b>1.2.5</b> Mapping and Geovisualization</a></li>
+<li class="chapter" data-level="1.2.6" data-path="a-quick-tour-of-geoda.html"><a href="a-quick-tour-of-geoda.html#exploratory-data-analysis-eda"><i class="fa fa-check"></i><b>1.2.6</b> Exploratory Data Analysis (EDA)</a></li>
+<li class="chapter" data-level="1.2.7" data-path="a-quick-tour-of-geoda.html"><a href="a-quick-tour-of-geoda.html#space-time-analysis"><i class="fa fa-check"></i><b>1.2.7</b> Space-Time Analysis</a></li>
+<li class="chapter" data-level="1.2.8" data-path="a-quick-tour-of-geoda.html"><a href="a-quick-tour-of-geoda.html#spatial-autocorrelation-analysis"><i class="fa fa-check"></i><b>1.2.8</b> Spatial Autocorrelation Analysis</a></li>
+<li class="chapter" data-level="1.2.9" data-path="a-quick-tour-of-geoda.html"><a href="a-quick-tour-of-geoda.html#cluster-analysis"><i class="fa fa-check"></i><b>1.2.9</b> Cluster Analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="sample-data-sets.html"><a href="sample-data-sets.html"><i class="fa fa-check"></i><b>1.3</b> Sample Data Sets</a></li>
+</ul></li>
+<li class="part"><span><b>I Spatial Data Wrangling</b></span></li>
+<li class="chapter" data-level="2" data-path="CHBasicoperations.html"><a href="CHBasicoperations.html"><i class="fa fa-check"></i><b>2</b> Basic Data Operations</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="topics-covered.html"><a href="topics-covered.html"><i class="fa fa-check"></i><b>2.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="2.2" data-path="spatial-data.html"><a href="spatial-data.html"><i class="fa fa-check"></i><b>2.2</b> Spatial Data</a>
+<ul>
+<li class="chapter" data-level="2.2.1" data-path="spatial-data.html"><a href="spatial-data.html#gis-files"><i class="fa fa-check"></i><b>2.2.1</b> GIS files</a>
+<ul>
+<li class="chapter" data-level="2.2.1.1" data-path="spatial-data.html"><a href="spatial-data.html#spatial-file-formats"><i class="fa fa-check"></i><b>2.2.1.1</b> Spatial file formats</a></li>
+<li class="chapter" data-level="2.2.1.2" data-path="spatial-data.html"><a href="spatial-data.html#polygon-layers"><i class="fa fa-check"></i><b>2.2.1.2</b> Polygon layers</a></li>
+<li class="chapter" data-level="2.2.1.3" data-path="spatial-data.html"><a href="spatial-data.html#file-format-conversion"><i class="fa fa-check"></i><b>2.2.1.3</b> File format conversion</a></li>
+<li class="chapter" data-level="2.2.1.4" data-path="spatial-data.html"><a href="spatial-data.html#point-layers"><i class="fa fa-check"></i><b>2.2.1.4</b> Point layers</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2.2" data-path="spatial-data.html"><a href="spatial-data.html#tabularfiles"><i class="fa fa-check"></i><b>2.2.2</b> Tabular files</a></li>
+<li class="chapter" data-level="2.2.3" data-path="spatial-data.html"><a href="spatial-data.html#otherinput"><i class="fa fa-check"></i><b>2.2.3</b> Other spatial data input</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="creating-spatial-layers.html"><a href="creating-spatial-layers.html"><i class="fa fa-check"></i><b>2.3</b> Creating Spatial Layers</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="creating-spatial-layers.html"><a href="creating-spatial-layers.html#pointfromcoord"><i class="fa fa-check"></i><b>2.3.1</b> Point layers from coordinates</a>
+<ul>
+<li class="chapter" data-level="2.3.1.1" data-path="creating-spatial-layers.html"><a href="creating-spatial-layers.html#firstprojection"><i class="fa fa-check"></i><b>2.3.1.1</b> A first note about projections</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3.2" data-path="creating-spatial-layers.html"><a href="creating-spatial-layers.html#grid"><i class="fa fa-check"></i><b>2.3.2</b> Grid</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="table-manipulations.html"><a href="table-manipulations.html"><i class="fa fa-check"></i><b>2.4</b> Table Manipulations</a>
+<ul>
+<li class="chapter" data-level="2.4.1" data-path="table-manipulations.html"><a href="table-manipulations.html#variable-properties"><i class="fa fa-check"></i><b>2.4.1</b> Variable properties</a>
+<ul>
+<li class="chapter" data-level="2.4.1.1" data-path="table-manipulations.html"><a href="table-manipulations.html#varproperties"><i class="fa fa-check"></i><b>2.4.1.1</b> Edit variable properties</a></li>
+<li class="chapter" data-level="2.4.1.2" data-path="table-manipulations.html"><a href="table-manipulations.html#editdate"><i class="fa fa-check"></i><b>2.4.1.2</b> Formatting date/time variables</a></li>
+<li class="chapter" data-level="2.4.1.3" data-path="table-manipulations.html"><a href="table-manipulations.html#othervarops"><i class="fa fa-check"></i><b>2.4.1.3</b> Other variable operations</a></li>
+<li class="chapter" data-level="2.4.1.4" data-path="table-manipulations.html"><a href="table-manipulations.html#operations-on-the-table"><i class="fa fa-check"></i><b>2.4.1.4</b> Operations on the table</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4.2" data-path="table-manipulations.html"><a href="table-manipulations.html#calculator"><i class="fa fa-check"></i><b>2.4.2</b> Calculator</a>
+<ul>
+<li class="chapter" data-level="2.4.2.1" data-path="table-manipulations.html"><a href="table-manipulations.html#special-functions"><i class="fa fa-check"></i><b>2.4.2.1</b> Special functions</a></li>
+<li class="chapter" data-level="2.4.2.2" data-path="table-manipulations.html"><a href="table-manipulations.html#shuffle"><i class="fa fa-check"></i><b>2.4.2.2</b> Univariate functions</a></li>
+<li class="chapter" data-level="2.4.2.3" data-path="table-manipulations.html"><a href="table-manipulations.html#variablestandardization"><i class="fa fa-check"></i><b>2.4.2.3</b> Variable standardization</a></li>
+<li class="chapter" data-level="2.4.2.4" data-path="table-manipulations.html"><a href="table-manipulations.html#bivariate-operations"><i class="fa fa-check"></i><b>2.4.2.4</b> Bivariate operations</a></li>
+<li class="chapter" data-level="2.4.2.5" data-path="table-manipulations.html"><a href="table-manipulations.html#datetimefunctions"><i class="fa fa-check"></i><b>2.4.2.5</b> Date and time functions</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4.3" data-path="table-manipulations.html"><a href="table-manipulations.html#tablemerge"><i class="fa fa-check"></i><b>2.4.3</b> Merging tables</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="queries.html"><a href="queries.html"><i class="fa fa-check"></i><b>2.5</b> Queries</a>
+<ul>
+<li class="chapter" data-level="2.5.1" data-path="queries.html"><a href="queries.html#selectiontool"><i class="fa fa-check"></i><b>2.5.1</b> Selection Tool</a>
+<ul>
+<li class="chapter" data-level="2.5.1.1" data-path="queries.html"><a href="queries.html#new-selection"><i class="fa fa-check"></i><b>2.5.1.1</b> New selection</a></li>
+<li class="chapter" data-level="2.5.1.2" data-path="queries.html"><a href="queries.html#otherselectionoptions"><i class="fa fa-check"></i><b>2.5.1.2</b> Other selection options</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5.2" data-path="queries.html"><a href="queries.html#indicator-variable"><i class="fa fa-check"></i><b>2.5.2</b> Indicator variable</a></li>
+<li class="chapter" data-level="2.5.3" data-path="queries.html"><a href="queries.html#saveselected"><i class="fa fa-check"></i><b>2.5.3</b> Save selected observations</a></li>
+<li class="chapter" data-level="2.5.4" data-path="queries.html"><a href="queries.html#spatialselection"><i class="fa fa-check"></i><b>2.5.4</b> Spatial selection</a>
+<ul>
+<li class="chapter" data-level="2.5.4.1" data-path="queries.html"><a href="queries.html#selectionbyshape"><i class="fa fa-check"></i><b>2.5.4.1</b> Selection by shape</a></li>
+<li class="chapter" data-level="2.5.4.2" data-path="queries.html"><a href="queries.html#selection-on-map-classification"><i class="fa fa-check"></i><b>2.5.4.2</b> Selection on map classification</a></li>
+<li class="chapter" data-level="2.5.4.3" data-path="queries.html"><a href="queries.html#saveselectedvar2"><i class="fa fa-check"></i><b>2.5.4.3</b> Save selection indicator variable</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="CHgisoperations.html"><a href="CHgisoperations.html"><i class="fa fa-check"></i><b>3</b> GIS Operations</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="topics-covered-1.html"><a href="topics-covered-1.html"><i class="fa fa-check"></i><b>3.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="3.2" data-path="projections.html"><a href="projections.html"><i class="fa fa-check"></i><b>3.2</b> Projections</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="projections.html"><a href="projections.html#coordinate-reference-system-crs"><i class="fa fa-check"></i><b>3.2.1</b> Coordinate reference system (CRS)</a></li>
+<li class="chapter" data-level="3.2.2" data-path="projections.html"><a href="projections.html#selecting-a-projection"><i class="fa fa-check"></i><b>3.2.2</b> Selecting a projection</a>
+<ul>
+<li class="chapter" data-level="3.2.2.1" data-path="projections.html"><a href="projections.html#specifying-the-crs"><i class="fa fa-check"></i><b>3.2.2.1</b> Specifying the CRS</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2.3" data-path="projections.html"><a href="projections.html#reprojection"><i class="fa fa-check"></i><b>3.2.3</b> Reprojection</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="points2polygons.html"><a href="points2polygons.html"><i class="fa fa-check"></i><b>3.3</b> Converting Between Points and Polygons</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="points2polygons.html"><a href="points2polygons.html#centroid"><i class="fa fa-check"></i><b>3.3.1</b> Mean centers and centroids</a>
+<ul>
+<li class="chapter" data-level="3.3.1.1" data-path="points2polygons.html"><a href="points2polygons.html#shape-center-options"><i class="fa fa-check"></i><b>3.3.1.1</b> Shape Center options</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3.2" data-path="points2polygons.html"><a href="points2polygons.html#tessellations"><i class="fa fa-check"></i><b>3.3.2</b> Tessellations</a>
+<ul>
+<li class="chapter" data-level="3.3.2.1" data-path="points2polygons.html"><a href="points2polygons.html#thiessen-polygons-options"><i class="fa fa-check"></i><b>3.3.2.1</b> Thiessen Polygons options</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="minspantree.html"><a href="minspantree.html"><i class="fa fa-check"></i><b>3.4</b> Minimum Spanning Tree (MST)</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="minspantree.html"><a href="minspantree.html#concept"><i class="fa fa-check"></i><b>3.4.1</b> Concept</a>
+<ul>
+<li class="chapter" data-level="3.4.1.1" data-path="minspantree.html"><a href="minspantree.html#worked-example---prims-algorithm-for-mst"><i class="fa fa-check"></i><b>3.4.1.1</b> Worked example - Prim’s algorithm for MST</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4.2" data-path="minspantree.html"><a href="minspantree.html#minimum-spanning-tree-options"><i class="fa fa-check"></i><b>3.4.2</b> Minimum Spanning Tree options</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="aggregation.html"><a href="aggregation.html"><i class="fa fa-check"></i><b>3.5</b> Aggregation</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="aggregation.html"><a href="aggregation.html#dissolve"><i class="fa fa-check"></i><b>3.5.1</b> Dissolve</a></li>
+<li class="chapter" data-level="3.5.2" data-path="aggregation.html"><a href="aggregation.html#tableaggregate"><i class="fa fa-check"></i><b>3.5.2</b> Aggregation in table</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6" data-path="multilayer.html"><a href="multilayer.html"><i class="fa fa-check"></i><b>3.6</b> Multi-Layer Support</a>
+<ul>
+<li class="chapter" data-level="3.6.1" data-path="multilayer.html"><a href="multilayer.html#loadmultiplelayers"><i class="fa fa-check"></i><b>3.6.1</b> Loading multiple layers</a>
+<ul>
+<li class="chapter" data-level="3.6.1.1" data-path="multilayer.html"><a href="multilayer.html#map-layer-setting-options"><i class="fa fa-check"></i><b>3.6.1.1</b> Map layer setting options</a></li>
+<li class="chapter" data-level="3.6.1.2" data-path="multilayer.html"><a href="multilayer.html#layer-position"><i class="fa fa-check"></i><b>3.6.1.2</b> Layer position</a></li>
+</ul></li>
+<li class="chapter" data-level="3.6.2" data-path="multilayer.html"><a href="multilayer.html#automatic-reprojection"><i class="fa fa-check"></i><b>3.6.2</b> Automatic reprojection</a></li>
+<li class="chapter" data-level="3.6.3" data-path="multilayer.html"><a href="multilayer.html#selection-in-multiple-layers"><i class="fa fa-check"></i><b>3.6.3</b> Selection in multiple layers</a></li>
+</ul></li>
+<li class="chapter" data-level="3.7" data-path="spatialjoin.html"><a href="spatialjoin.html"><i class="fa fa-check"></i><b>3.7</b> Spatial Join</a>
+<ul>
+<li class="chapter" data-level="3.7.1" data-path="spatialjoin.html"><a href="spatialjoin.html#spatial-assign"><i class="fa fa-check"></i><b>3.7.1</b> Spatial assign</a></li>
+<li class="chapter" data-level="3.7.2" data-path="spatialjoin.html"><a href="spatialjoin.html#spatial-count"><i class="fa fa-check"></i><b>3.7.2</b> Spatial count</a></li>
+</ul></li>
+<li class="chapter" data-level="3.8" data-path="linkedmultilayer.html"><a href="linkedmultilayer.html"><i class="fa fa-check"></i><b>3.8</b> Linked Multi-Layers</a>
+<ul>
+<li class="chapter" data-level="3.8.1" data-path="linkedmultilayer.html"><a href="linkedmultilayer.html#specifying-an-inter-layer-linkage"><i class="fa fa-check"></i><b>3.8.1</b> Specifying an inter-layer linkage</a></li>
+<li class="chapter" data-level="3.8.2" data-path="linkedmultilayer.html"><a href="linkedmultilayer.html#visualizing-linked-selections"><i class="fa fa-check"></i><b>3.8.2</b> Visualizing linked selections</a></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>II EDA and ESDA</b></span></li>
+<li class="chapter" data-level="4" data-path="CHmappingprimer.html"><a href="CHmappingprimer.html"><i class="fa fa-check"></i><b>4</b> Geovisualization</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="topics-covered-2.html"><a href="topics-covered-2.html"><i class="fa fa-check"></i><b>4.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="4.2" data-path="eda2esda.html"><a href="eda2esda.html"><i class="fa fa-check"></i><b>4.2</b> From EDA to ESDA</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="eda2esda.html"><a href="eda2esda.html#eda"><i class="fa fa-check"></i><b>4.2.1</b> Exploratory Data Analysis (EDA)</a></li>
+<li class="chapter" data-level="4.2.2" data-path="eda2esda.html"><a href="eda2esda.html#mapping-as-exploration"><i class="fa fa-check"></i><b>4.2.2</b> Mapping as exploration</a></li>
+<li class="chapter" data-level="4.2.3" data-path="eda2esda.html"><a href="eda2esda.html#exploratory-spatial-data-analysis-esda"><i class="fa fa-check"></i><b>4.2.3</b> Exploratory Spatial Data Analysis (ESDA)</a></li>
+<li class="chapter" data-level="4.2.4" data-path="eda2esda.html"><a href="eda2esda.html#linking-and-brushing"><i class="fa fa-check"></i><b>4.2.4</b> Linking and Brushing</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="thematic-maps-overview.html"><a href="thematic-maps-overview.html"><i class="fa fa-check"></i><b>4.3</b> Thematic Maps – Overview</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="thematic-maps-overview.html"><a href="thematic-maps-overview.html#choropleth-map"><i class="fa fa-check"></i><b>4.3.1</b> Choropleth map</a></li>
+<li class="chapter" data-level="4.3.2" data-path="thematic-maps-overview.html"><a href="thematic-maps-overview.html#map-classification"><i class="fa fa-check"></i><b>4.3.2</b> Map classification</a></li>
+<li class="chapter" data-level="4.3.3" data-path="thematic-maps-overview.html"><a href="thematic-maps-overview.html#legend-and-color"><i class="fa fa-check"></i><b>4.3.3</b> Legend and color</a></li>
+<li class="chapter" data-level="4.3.4" data-path="thematic-maps-overview.html"><a href="thematic-maps-overview.html#implementation"><i class="fa fa-check"></i><b>4.3.4</b> Implementation</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="commonclassifications.html"><a href="commonclassifications.html"><i class="fa fa-check"></i><b>4.4</b> Common Map Classifications</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="commonclassifications.html"><a href="commonclassifications.html#quantile-map"><i class="fa fa-check"></i><b>4.4.1</b> Quantile map</a>
+<ul>
+<li class="chapter" data-level="4.4.1.1" data-path="commonclassifications.html"><a href="commonclassifications.html#problemwquantile"><i class="fa fa-check"></i><b>4.4.1.1</b> The problem with quantile maps</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4.2" data-path="commonclassifications.html"><a href="commonclassifications.html#equalintervals"><i class="fa fa-check"></i><b>4.4.2</b> Equal intervals map</a></li>
+<li class="chapter" data-level="4.4.3" data-path="commonclassifications.html"><a href="commonclassifications.html#natural-breaks-map"><i class="fa fa-check"></i><b>4.4.3</b> Natural breaks map</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="mapoptions.html"><a href="mapoptions.html"><i class="fa fa-check"></i><b>4.5</b> Map Options</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="mapoptions.html"><a href="mapoptions.html#maplegend"><i class="fa fa-check"></i><b>4.5.1</b> The map legend</a></li>
+<li class="chapter" data-level="4.5.2" data-path="mapoptions.html"><a href="mapoptions.html#maptoolbar"><i class="fa fa-check"></i><b>4.5.2</b> The map toolbar</a></li>
+<li class="chapter" data-level="4.5.3" data-path="mapoptions.html"><a href="mapoptions.html#mapbaselayer"><i class="fa fa-check"></i><b>4.5.3</b> Map base layer (base map)</a>
+<ul>
+<li class="chapter" data-level="4.5.3.1" data-path="mapoptions.html"><a href="mapoptions.html#detailedlayeroptions"><i class="fa fa-check"></i><b>4.5.3.1</b> Detailed base layer options</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5.4" data-path="mapoptions.html"><a href="mapoptions.html#saving-the-classification-as-a-categorical-variable"><i class="fa fa-check"></i><b>4.5.4</b> Saving the classification as a categorical variable</a></li>
+<li class="chapter" data-level="4.5.5" data-path="mapoptions.html"><a href="mapoptions.html#savemapimage"><i class="fa fa-check"></i><b>4.5.5</b> Saving the map as an image</a></li>
+<li class="chapter" data-level="4.5.6" data-path="mapoptions.html"><a href="mapoptions.html#other-map-options"><i class="fa fa-check"></i><b>4.5.6</b> Other map options</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="customclassification.html"><a href="customclassification.html"><i class="fa fa-check"></i><b>4.6</b> Custom Classifications</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="customclassification.html"><a href="customclassification.html#category-editor"><i class="fa fa-check"></i><b>4.6.1</b> Category editor</a>
+<ul>
+<li class="chapter" data-level="4.6.1.1" data-path="customclassification.html"><a href="customclassification.html#design"><i class="fa fa-check"></i><b>4.6.1.1</b> Design</a></li>
+<li class="chapter" data-level="4.6.1.2" data-path="customclassification.html"><a href="customclassification.html#editing-break-points"><i class="fa fa-check"></i><b>4.6.1.2</b> Editing break points</a></li>
+<li class="chapter" data-level="4.6.1.3" data-path="customclassification.html"><a href="customclassification.html#categorylabels"><i class="fa fa-check"></i><b>4.6.1.3</b> Custom category labels</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6.2" data-path="customclassification.html"><a href="customclassification.html#applications-of-custom-categories"><i class="fa fa-check"></i><b>4.6.2</b> Applications of custom categories</a></li>
+<li class="chapter" data-level="4.6.3" data-path="customclassification.html"><a href="customclassification.html#customprojectfile"><i class="fa fa-check"></i><b>4.6.3</b> Saving the custom categories - the Project File</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="CHStatisticalMaps.html"><a href="CHStatisticalMaps.html"><i class="fa fa-check"></i><b>5</b> Statistical Maps</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="topics-covered-3.html"><a href="topics-covered-3.html"><i class="fa fa-check"></i><b>5.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="5.2" data-path="extremevaluemaps.html"><a href="extremevaluemaps.html"><i class="fa fa-check"></i><b>5.2</b> Extreme Value Maps</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="extremevaluemaps.html"><a href="extremevaluemaps.html#percentile-map"><i class="fa fa-check"></i><b>5.2.1</b> Percentile map</a></li>
+<li class="chapter" data-level="5.2.2" data-path="extremevaluemaps.html"><a href="extremevaluemaps.html#boxmap"><i class="fa fa-check"></i><b>5.2.2</b> Box map</a></li>
+<li class="chapter" data-level="5.2.3" data-path="extremevaluemaps.html"><a href="extremevaluemaps.html#standarddeviationmap"><i class="fa fa-check"></i><b>5.2.3</b> Standard deviation map</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="mapcategoricalvars.html"><a href="mapcategoricalvars.html"><i class="fa fa-check"></i><b>5.3</b> Mapping Categorical Variables</a>
+<ul>
+<li class="chapter" data-level="5.3.1" data-path="mapcategoricalvars.html"><a href="mapcategoricalvars.html#uniquevalues"><i class="fa fa-check"></i><b>5.3.1</b> Unique values map</a></li>
+<li class="chapter" data-level="5.3.2" data-path="mapcategoricalvars.html"><a href="mapcategoricalvars.html#colocation"><i class="fa fa-check"></i><b>5.3.2</b> Co-location map</a>
+<ul>
+<li class="chapter" data-level="5.3.2.1" data-path="mapcategoricalvars.html"><a href="mapcategoricalvars.html#binary-categories"><i class="fa fa-check"></i><b>5.3.2.1</b> Binary categories</a></li>
+<li class="chapter" data-level="5.3.2.2" data-path="mapcategoricalvars.html"><a href="mapcategoricalvars.html#multiple-categories"><i class="fa fa-check"></i><b>5.3.2.2</b> Multiple categories</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="cartogram.html"><a href="cartogram.html"><i class="fa fa-check"></i><b>5.4</b> Cartogram</a>
+<ul>
+<li class="chapter" data-level="5.4.1" data-path="cartogram.html"><a href="cartogram.html#principle"><i class="fa fa-check"></i><b>5.4.1</b> Principle</a></li>
+<li class="chapter" data-level="5.4.2" data-path="cartogram.html"><a href="cartogram.html#creating-a-cartogram"><i class="fa fa-check"></i><b>5.4.2</b> Creating a cartogram</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="mapanimation.html"><a href="mapanimation.html"><i class="fa fa-check"></i><b>5.5</b> Map Animation</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="CHratemaps.html"><a href="CHratemaps.html"><i class="fa fa-check"></i><b>6</b> Maps for Rates</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="topics-covered-4.html"><a href="topics-covered-4.html"><i class="fa fa-check"></i><b>6.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="6.2" data-path="choropleth-maps-for-rates.html"><a href="choropleth-maps-for-rates.html"><i class="fa fa-check"></i><b>6.2</b> Choropleth Maps for Rates</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="choropleth-maps-for-rates.html"><a href="choropleth-maps-for-rates.html#spatially-extensive-and-spatially-intensive-variables"><i class="fa fa-check"></i><b>6.2.1</b> Spatially extensive and spatially intensive variables</a></li>
+<li class="chapter" data-level="6.2.2" data-path="choropleth-maps-for-rates.html"><a href="choropleth-maps-for-rates.html#rawratemap"><i class="fa fa-check"></i><b>6.2.2</b> Raw rate map</a>
+<ul>
+<li class="chapter" data-level="6.2.2.1" data-path="choropleth-maps-for-rates.html"><a href="choropleth-maps-for-rates.html#ratesintable"><i class="fa fa-check"></i><b>6.2.2.1</b> Rates in the table</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="excess-risk---smr---lq.html"><a href="excess-risk---smr---lq.html"><i class="fa fa-check"></i><b>6.3</b> Excess Risk - SMR - LQ</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="excess-risk---smr---lq.html"><a href="excess-risk---smr---lq.html#relative-risk"><i class="fa fa-check"></i><b>6.3.1</b> Relative risk</a></li>
+<li class="chapter" data-level="6.3.2" data-path="excess-risk---smr---lq.html"><a href="excess-risk---smr---lq.html#excess-risk-map"><i class="fa fa-check"></i><b>6.3.2</b> Excess risk map</a>
+<ul>
+<li class="chapter" data-level="6.3.2.1" data-path="excess-risk---smr---lq.html"><a href="excess-risk---smr---lq.html#saving-and-calculating-excess-risk"><i class="fa fa-check"></i><b>6.3.2.1</b> Saving and calculating excess risk</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="ratesmoothing.html"><a href="ratesmoothing.html"><i class="fa fa-check"></i><b>6.4</b> Rate Smoothing</a>
+<ul>
+<li class="chapter" data-level="6.4.1" data-path="ratesmoothing.html"><a href="ratesmoothing.html#varianceinstability"><i class="fa fa-check"></i><b>6.4.1</b> Variance Instability</a></li>
+<li class="chapter" data-level="6.4.2" data-path="ratesmoothing.html"><a href="ratesmoothing.html#borrowing-strength"><i class="fa fa-check"></i><b>6.4.2</b> Borrowing strength</a>
+<ul>
+<li class="chapter" data-level="6.4.2.1" data-path="ratesmoothing.html"><a href="ratesmoothing.html#bayes-law"><i class="fa fa-check"></i><b>6.4.2.1</b> Bayes Law</a></li>
+<li class="chapter" data-level="6.4.2.2" data-path="ratesmoothing.html"><a href="ratesmoothing.html#empiricalbayes"><i class="fa fa-check"></i><b>6.4.2.2</b> The Empirical Bayes approach</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4.3" data-path="ratesmoothing.html"><a href="ratesmoothing.html#empirical-bayes-smoothed-rate-map"><i class="fa fa-check"></i><b>6.4.3</b> Empirical Bayes smoothed rate map</a>
+<ul>
+<li class="chapter" data-level="6.4.3.1" data-path="ratesmoothing.html"><a href="ratesmoothing.html#the-effect-of-smoothing"><i class="fa fa-check"></i><b>6.4.3.1</b> The effect of smoothing</a></li>
+<li class="chapter" data-level="6.4.3.2" data-path="ratesmoothing.html"><a href="ratesmoothing.html#EBintable"><i class="fa fa-check"></i><b>6.4.3.2</b> Calculating EB smoothed rates in the table</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="CHunivariateEDA.html"><a href="CHunivariateEDA.html"><i class="fa fa-check"></i><b>7</b> Univariate and Bivariate Data Exploration</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="topics-covered-5.html"><a href="topics-covered-5.html"><i class="fa fa-check"></i><b>7.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="7.2" data-path="analyzing-the-distribution-of-a-single-variable.html"><a href="analyzing-the-distribution-of-a-single-variable.html"><i class="fa fa-check"></i><b>7.2</b> Analyzing the Distribution of a Single Variable</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="analyzing-the-distribution-of-a-single-variable.html"><a href="analyzing-the-distribution-of-a-single-variable.html#histogram"><i class="fa fa-check"></i><b>7.2.1</b> Histogram</a>
+<ul>
+<li class="chapter" data-level="7.2.1.1" data-path="analyzing-the-distribution-of-a-single-variable.html"><a href="analyzing-the-distribution-of-a-single-variable.html#histogram-basics"><i class="fa fa-check"></i><b>7.2.1.1</b> Histogram basics</a></li>
+<li class="chapter" data-level="7.2.1.2" data-path="analyzing-the-distribution-of-a-single-variable.html"><a href="analyzing-the-distribution-of-a-single-variable.html#bar-charts"><i class="fa fa-check"></i><b>7.2.1.2</b> Bar charts</a></li>
+<li class="chapter" data-level="7.2.1.3" data-path="analyzing-the-distribution-of-a-single-variable.html"><a href="analyzing-the-distribution-of-a-single-variable.html#descriptive-statistics"><i class="fa fa-check"></i><b>7.2.1.3</b> Descriptive statistics</a></li>
+<li class="chapter" data-level="7.2.1.4" data-path="analyzing-the-distribution-of-a-single-variable.html"><a href="analyzing-the-distribution-of-a-single-variable.html#linkmaphistogram"><i class="fa fa-check"></i><b>7.2.1.4</b> Linking map and histogram</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2.2" data-path="analyzing-the-distribution-of-a-single-variable.html"><a href="analyzing-the-distribution-of-a-single-variable.html#box-plot"><i class="fa fa-check"></i><b>7.2.2</b> Box plot</a>
+<ul>
+<li class="chapter" data-level="7.2.2.1" data-path="analyzing-the-distribution-of-a-single-variable.html"><a href="analyzing-the-distribution-of-a-single-variable.html#implementation-1"><i class="fa fa-check"></i><b>7.2.2.1</b> Implementation</a></li>
+<li class="chapter" data-level="7.2.2.2" data-path="analyzing-the-distribution-of-a-single-variable.html"><a href="analyzing-the-distribution-of-a-single-variable.html#box-plot-and-box-map"><i class="fa fa-check"></i><b>7.2.2.2</b> Box plot and box map</a></li>
+<li class="chapter" data-level="7.2.2.3" data-path="analyzing-the-distribution-of-a-single-variable.html"><a href="analyzing-the-distribution-of-a-single-variable.html#boxplotoptions"><i class="fa fa-check"></i><b>7.2.2.3</b> Box plot options</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="scatterplot.html"><a href="scatterplot.html"><i class="fa fa-check"></i><b>7.3</b> Bivariate Analysis - The Scatter Plot</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="scatterplot.html"><a href="scatterplot.html#scatplotbasics"><i class="fa fa-check"></i><b>7.3.1</b> Scatter plot basics</a>
+<ul>
+<li class="chapter" data-level="7.3.1.1" data-path="scatterplot.html"><a href="scatterplot.html#viewoptions"><i class="fa fa-check"></i><b>7.3.1.1</b> View options</a></li>
+<li class="chapter" data-level="7.3.1.2" data-path="scatterplot.html"><a href="scatterplot.html#data-options"><i class="fa fa-check"></i><b>7.3.1.2</b> Data options</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3.2" data-path="scatterplot.html"><a href="scatterplot.html#lowess"><i class="fa fa-check"></i><b>7.3.2</b> Smoother option - local regression</a>
+<ul>
+<li class="chapter" data-level="7.3.2.1" data-path="scatterplot.html"><a href="scatterplot.html#lowessparameters"><i class="fa fa-check"></i><b>7.3.2.1</b> LOWESS parameters</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="scatter-plot-matrix.html"><a href="scatter-plot-matrix.html"><i class="fa fa-check"></i><b>7.4</b> Scatter plot matrix</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="scatter-plot-matrix.html"><a href="scatter-plot-matrix.html#implementation-2"><i class="fa fa-check"></i><b>7.4.1</b> Implementation</a>
+<ul>
+<li class="chapter" data-level="7.4.1.1" data-path="scatter-plot-matrix.html"><a href="scatter-plot-matrix.html#scatter-plot-matrix-options"><i class="fa fa-check"></i><b>7.4.1.1</b> Scatter plot matrix options</a></li>
+<li class="chapter" data-level="7.4.1.2" data-path="scatter-plot-matrix.html"><a href="scatter-plot-matrix.html#correlation-matrix"><i class="fa fa-check"></i><b>7.4.1.2</b> Correlation matrix</a></li>
+<li class="chapter" data-level="7.4.1.3" data-path="scatter-plot-matrix.html"><a href="scatter-plot-matrix.html#lowess-scatter-plot-matrix"><i class="fa fa-check"></i><b>7.4.1.3</b> LOWESS scatter plot matrix</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="spatialheterogeneity.html"><a href="spatialheterogeneity.html"><i class="fa fa-check"></i><b>7.5</b> Spatial Heterogeneity</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="spatialheterogeneity.html"><a href="spatialheterogeneity.html#averageschartcross"><i class="fa fa-check"></i><b>7.5.1</b> Averages chart</a>
+<ul>
+<li class="chapter" data-level="7.5.1.1" data-path="spatialheterogeneity.html"><a href="spatialheterogeneity.html#selected-and-unselected-observations"><i class="fa fa-check"></i><b>7.5.1.1</b> Selected and unselected observations</a></li>
+<li class="chapter" data-level="7.5.1.2" data-path="spatialheterogeneity.html"><a href="spatialheterogeneity.html#map-brushing-and-the-averages-chart"><i class="fa fa-check"></i><b>7.5.1.2</b> Map brushing and the averages chart</a></li>
+<li class="chapter" data-level="7.5.1.3" data-path="spatialheterogeneity.html"><a href="spatialheterogeneity.html#averages-chart-options"><i class="fa fa-check"></i><b>7.5.1.3</b> Averages chart options</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5.2" data-path="spatialheterogeneity.html"><a href="spatialheterogeneity.html#scatterbrushing"><i class="fa fa-check"></i><b>7.5.2</b> Brushing the scatter plot</a>
+<ul>
+<li class="chapter" data-level="7.5.2.1" data-path="spatialheterogeneity.html"><a href="spatialheterogeneity.html#scatter-plot-brushing"><i class="fa fa-check"></i><b>7.5.2.1</b> Scatter plot brushing</a></li>
+<li class="chapter" data-level="7.5.2.2" data-path="spatialheterogeneity.html"><a href="spatialheterogeneity.html#map-brushing-and-scatter-plot"><i class="fa fa-check"></i><b>7.5.2.2</b> Map brushing and scatter plot</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="CHmultieda.html"><a href="CHmultieda.html"><i class="fa fa-check"></i><b>8</b> Multivariate Data Exploration</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="topics-covered-6.html"><a href="topics-covered-6.html"><i class="fa fa-check"></i><b>8.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="8.2" data-path="the-curse-of-dimensionality.html"><a href="the-curse-of-dimensionality.html"><i class="fa fa-check"></i><b>8.2</b> The Curse of Dimensionality</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="the-curse-of-dimensionality.html"><a href="the-curse-of-dimensionality.html#emptyspaceproblem"><i class="fa fa-check"></i><b>8.2.1</b> The empty space phenomenon</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="three-variables-bubble-chart-and-3-d-scatter-plot.html"><a href="three-variables-bubble-chart-and-3-d-scatter-plot.html"><i class="fa fa-check"></i><b>8.3</b> Three Variables: Bubble Chart and 3-D Scatter Plot</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="three-variables-bubble-chart-and-3-d-scatter-plot.html"><a href="three-variables-bubble-chart-and-3-d-scatter-plot.html#bubblechart"><i class="fa fa-check"></i><b>8.3.1</b> Bubble Chart</a>
+<ul>
+<li class="chapter" data-level="8.3.1.1" data-path="three-variables-bubble-chart-and-3-d-scatter-plot.html"><a href="three-variables-bubble-chart-and-3-d-scatter-plot.html#implementation-3"><i class="fa fa-check"></i><b>8.3.1.1</b> Implementation</a></li>
+<li class="chapter" data-level="8.3.1.2" data-path="three-variables-bubble-chart-and-3-d-scatter-plot.html"><a href="three-variables-bubble-chart-and-3-d-scatter-plot.html#bubble-chart-options"><i class="fa fa-check"></i><b>8.3.1.2</b> Bubble chart options</a></li>
+<li class="chapter" data-level="8.3.1.3" data-path="three-variables-bubble-chart-and-3-d-scatter-plot.html"><a href="three-variables-bubble-chart-and-3-d-scatter-plot.html#bubblechartcategory"><i class="fa fa-check"></i><b>8.3.1.3</b> Bubble chart with categorical variables</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3.2" data-path="three-variables-bubble-chart-and-3-d-scatter-plot.html"><a href="three-variables-bubble-chart-and-3-d-scatter-plot.html#threedscatplot"><i class="fa fa-check"></i><b>8.3.2</b> 3-D Scatter Plot</a>
+<ul>
+<li class="chapter" data-level="8.3.2.1" data-path="three-variables-bubble-chart-and-3-d-scatter-plot.html"><a href="three-variables-bubble-chart-and-3-d-scatter-plot.html#implementation-4"><i class="fa fa-check"></i><b>8.3.2.1</b> Implementation</a></li>
+<li class="chapter" data-level="8.3.2.2" data-path="three-variables-bubble-chart-and-3-d-scatter-plot.html"><a href="three-variables-bubble-chart-and-3-d-scatter-plot.html#interacting-with-the-3-d-scatter-plot"><i class="fa fa-check"></i><b>8.3.2.2</b> Interacting with the 3-D scatter plot</a></li>
+<li class="chapter" data-level="8.3.2.3" data-path="three-variables-bubble-chart-and-3-d-scatter-plot.html"><a href="three-variables-bubble-chart-and-3-d-scatter-plot.html#threedselection"><i class="fa fa-check"></i><b>8.3.2.3</b> Selection in the 3-D scatter plot</a></li>
+<li class="chapter" data-level="8.3.2.4" data-path="three-variables-bubble-chart-and-3-d-scatter-plot.html"><a href="three-variables-bubble-chart-and-3-d-scatter-plot.html#d-scatter-options"><i class="fa fa-check"></i><b>8.3.2.4</b> 3-D scatter options</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="conditionalplots.html"><a href="conditionalplots.html"><i class="fa fa-check"></i><b>8.4</b> Conditional Plots</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="conditionalplots.html"><a href="conditionalplots.html#implementation-5"><i class="fa fa-check"></i><b>8.4.1</b> Implementation</a>
+<ul>
+<li class="chapter" data-level="8.4.1.1" data-path="conditionalplots.html"><a href="conditionalplots.html#conditional-plot-options"><i class="fa fa-check"></i><b>8.4.1.1</b> Conditional plot options</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4.2" data-path="conditionalplots.html"><a href="conditionalplots.html#conditionalgraphs"><i class="fa fa-check"></i><b>8.4.2</b> Conditional statistical graphs</a></li>
+<li class="chapter" data-level="8.4.3" data-path="conditionalplots.html"><a href="conditionalplots.html#conditionalmaps"><i class="fa fa-check"></i><b>8.4.3</b> Conditional Maps</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="parallel-coordinate-plot.html"><a href="parallel-coordinate-plot.html"><i class="fa fa-check"></i><b>8.5</b> Parallel Coordinate Plot</a>
+<ul>
+<li class="chapter" data-level="8.5.1" data-path="parallel-coordinate-plot.html"><a href="parallel-coordinate-plot.html#implementation-6"><i class="fa fa-check"></i><b>8.5.1</b> Implementation</a>
+<ul>
+<li class="chapter" data-level="8.5.1.1" data-path="parallel-coordinate-plot.html"><a href="parallel-coordinate-plot.html#pcp-options"><i class="fa fa-check"></i><b>8.5.1.1</b> PCP options</a></li>
+<li class="chapter" data-level="8.5.1.2" data-path="parallel-coordinate-plot.html"><a href="parallel-coordinate-plot.html#brushing-the-pcp"><i class="fa fa-check"></i><b>8.5.1.2</b> Brushing the PCP</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5.2" data-path="parallel-coordinate-plot.html"><a href="parallel-coordinate-plot.html#clusters-and-outliers-in-pcp"><i class="fa fa-check"></i><b>8.5.2</b> Clusters and outliers in PCP</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="CHspacetimeEDA.html"><a href="CHspacetimeEDA.html"><i class="fa fa-check"></i><b>9</b> Space-Time Exploration</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="topics-covered-7.html"><a href="topics-covered-7.html"><i class="fa fa-check"></i><b>9.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="9.2" data-path="time-editor.html"><a href="time-editor.html"><i class="fa fa-check"></i><b>9.2</b> Time Editor</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="time-editor.html"><a href="time-editor.html#creatinggroupedvars"><i class="fa fa-check"></i><b>9.2.1</b> Creating grouped variables</a>
+<ul>
+<li class="chapter" data-level="9.2.1.1" data-path="time-editor.html"><a href="time-editor.html#groupproject"><i class="fa fa-check"></i><b>9.2.1.1</b> Grouped variables in Project File</a></li>
+<li class="chapter" data-level="9.2.1.2" data-path="time-editor.html"><a href="time-editor.html#savingspacetimedata"><i class="fa fa-check"></i><b>9.2.1.2</b> Saving the space-time data table</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="time-player---comparative-statics.html"><a href="time-player---comparative-statics.html"><i class="fa fa-check"></i><b>9.3</b> Time Player - Comparative Statics</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="time-player---comparative-statics.html"><a href="time-player---comparative-statics.html#box-plot-over-time"><i class="fa fa-check"></i><b>9.3.1</b> Box plot over time</a>
+<ul>
+<li class="chapter" data-level="9.3.1.1" data-path="time-player---comparative-statics.html"><a href="time-player---comparative-statics.html#dynamic-box-plot-options"><i class="fa fa-check"></i><b>9.3.1.1</b> Dynamic box plot options</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3.2" data-path="time-player---comparative-statics.html"><a href="time-player---comparative-statics.html#scatter-plot-with-a-time-lagged-variable"><i class="fa fa-check"></i><b>9.3.2</b> Scatter plot with a time-lagged variable</a></li>
+<li class="chapter" data-level="9.3.3" data-path="time-player---comparative-statics.html"><a href="time-player---comparative-statics.html#thematic-map-over-time"><i class="fa fa-check"></i><b>9.3.3</b> Thematic map over time</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="treatment-effect-analysis---averages-chart.html"><a href="treatment-effect-analysis---averages-chart.html"><i class="fa fa-check"></i><b>9.4</b> Treatment Effect Analysis - Averages Chart</a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="treatment-effect-analysis---averages-chart.html"><a href="treatment-effect-analysis---averages-chart.html#difference-in-means"><i class="fa fa-check"></i><b>9.4.1</b> Difference in means</a></li>
+<li class="chapter" data-level="9.4.2" data-path="treatment-effect-analysis---averages-chart.html"><a href="treatment-effect-analysis---averages-chart.html#difference-in-difference-did"><i class="fa fa-check"></i><b>9.4.2</b> Difference in difference (DID)</a>
+<ul>
+<li class="chapter" data-level="9.4.2.1" data-path="treatment-effect-analysis---averages-chart.html"><a href="treatment-effect-analysis---averages-chart.html#implementation-7"><i class="fa fa-check"></i><b>9.4.2.1</b> Implementation</a></li>
+<li class="chapter" data-level="9.4.2.2" data-path="treatment-effect-analysis---averages-chart.html"><a href="treatment-effect-analysis---averages-chart.html#interpretation-and-options-of-diff-in-diff-results"><i class="fa fa-check"></i><b>9.4.2.2</b> Interpretation and options of Diff-in-Diff results</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>III Spatial Weights</b></span></li>
+<li class="chapter" data-level="10" data-path="CHcontiguityweights.html"><a href="CHcontiguityweights.html"><i class="fa fa-check"></i><b>10</b> Contiguity-Based Spatial Weights</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="topics-covered-8.html"><a href="topics-covered-8.html"><i class="fa fa-check"></i><b>10.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="10.2" data-path="the-concept-of-spatial-weights.html"><a href="the-concept-of-spatial-weights.html"><i class="fa fa-check"></i><b>10.2</b> The Concept of Spatial Weights</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="the-concept-of-spatial-weights.html"><a href="the-concept-of-spatial-weights.html#spatial-weights-matrix"><i class="fa fa-check"></i><b>10.2.1</b> Spatial weights matrix</a>
+<ul>
+<li class="chapter" data-level="10.2.1.1" data-path="the-concept-of-spatial-weights.html"><a href="the-concept-of-spatial-weights.html#row-standardizing-spatial-weights"><i class="fa fa-check"></i><b>10.2.1.1</b> Row-standardizing spatial weights</a></li>
+</ul></li>
+<li class="chapter" data-level="10.2.2" data-path="the-concept-of-spatial-weights.html"><a href="the-concept-of-spatial-weights.html#types-of-contiguity"><i class="fa fa-check"></i><b>10.2.2</b> Types of contiguity</a></li>
+<li class="chapter" data-level="10.2.3" data-path="the-concept-of-spatial-weights.html"><a href="the-concept-of-spatial-weights.html#higherorder"><i class="fa fa-check"></i><b>10.2.3</b> Higher-Order contiguity</a>
+<ul>
+<li class="chapter" data-level="10.2.3.1" data-path="the-concept-of-spatial-weights.html"><a href="the-concept-of-spatial-weights.html#redundantpaths"><i class="fa fa-check"></i><b>10.2.3.1</b> Circular and redundant paths</a></li>
+</ul></li>
+<li class="chapter" data-level="10.2.4" data-path="the-concept-of-spatial-weights.html"><a href="the-concept-of-spatial-weights.html#practical-considerations"><i class="fa fa-check"></i><b>10.2.4</b> Practical considerations</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="creating-contiguity-weigths.html"><a href="creating-contiguity-weigths.html"><i class="fa fa-check"></i><b>10.3</b> Creating Contiguity Weigths</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="creating-contiguity-weigths.html"><a href="creating-contiguity-weigths.html#contweightsmanager"><i class="fa fa-check"></i><b>10.3.1</b> Weights manager</a>
+<ul>
+<li class="chapter" data-level="10.3.1.1" data-path="creating-contiguity-weigths.html"><a href="creating-contiguity-weigths.html#id-variable"><i class="fa fa-check"></i><b>10.3.1.1</b> ID variable</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3.2" data-path="creating-contiguity-weigths.html"><a href="creating-contiguity-weigths.html#rook-contiguity"><i class="fa fa-check"></i><b>10.3.2</b> Rook contiguity</a>
+<ul>
+<li class="chapter" data-level="10.3.2.1" data-path="creating-contiguity-weigths.html"><a href="creating-contiguity-weigths.html#gal-file"><i class="fa fa-check"></i><b>10.3.2.1</b> GAL file</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3.3" data-path="creating-contiguity-weigths.html"><a href="creating-contiguity-weigths.html#queen-contiguity"><i class="fa fa-check"></i><b>10.3.3</b> Queen contiguity</a></li>
+<li class="chapter" data-level="10.3.4" data-path="creating-contiguity-weigths.html"><a href="creating-contiguity-weigths.html#implhigherordercont"><i class="fa fa-check"></i><b>10.3.4</b> Higher order contiguity</a></li>
+<li class="chapter" data-level="10.3.5" data-path="creating-contiguity-weigths.html"><a href="creating-contiguity-weigths.html#weightsprojectfile"><i class="fa fa-check"></i><b>10.3.5</b> Project file</a></li>
+<li class="chapter" data-level="10.3.6" data-path="creating-contiguity-weigths.html"><a href="creating-contiguity-weigths.html#existingweights"><i class="fa fa-check"></i><b>10.3.6</b> Using Existing Weights</a></li>
+<li class="chapter" data-level="10.3.7" data-path="creating-contiguity-weigths.html"><a href="creating-contiguity-weigths.html#space-time-weights"><i class="fa fa-check"></i><b>10.3.7</b> Space-Time weights</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="weightscharacteristics.html"><a href="weightscharacteristics.html"><i class="fa fa-check"></i><b>10.4</b> Weights Characteristics</a>
+<ul>
+<li class="chapter" data-level="10.4.1" data-path="weightscharacteristics.html"><a href="weightscharacteristics.html#weightsummarychars"><i class="fa fa-check"></i><b>10.4.1</b> Summary characteristics</a></li>
+<li class="chapter" data-level="10.4.2" data-path="weightscharacteristics.html"><a href="weightscharacteristics.html#connectivityhistogram"><i class="fa fa-check"></i><b>10.4.2</b> Connectivity histogram</a>
+<ul>
+<li class="chapter" data-level="10.4.2.1" data-path="weightscharacteristics.html"><a href="weightscharacteristics.html#neighbor-cardinality"><i class="fa fa-check"></i><b>10.4.2.1</b> Neighbor cardinality</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4.3" data-path="weightscharacteristics.html"><a href="weightscharacteristics.html#connectivity-map"><i class="fa fa-check"></i><b>10.4.3</b> Connectivity map</a></li>
+<li class="chapter" data-level="10.4.4" data-path="weightscharacteristics.html"><a href="weightscharacteristics.html#connectivity-graph"><i class="fa fa-check"></i><b>10.4.4</b> Connectivity graph</a></li>
+<li class="chapter" data-level="10.4.5" data-path="weightscharacteristics.html"><a href="weightscharacteristics.html#connectivity-option"><i class="fa fa-check"></i><b>10.4.5</b> Connectivity Option</a>
+<ul>
+<li class="chapter" data-level="10.4.5.1" data-path="weightscharacteristics.html"><a href="weightscharacteristics.html#mapconnectivityoption"><i class="fa fa-check"></i><b>10.4.5.1</b> Connectivity option in the map</a></li>
+<li class="chapter" data-level="10.4.5.2" data-path="weightscharacteristics.html"><a href="weightscharacteristics.html#connectivity-option-in-the-table"><i class="fa fa-check"></i><b>10.4.5.2</b> Connectivity option in the table</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="CHdistanceweights.html"><a href="CHdistanceweights.html"><i class="fa fa-check"></i><b>11</b> Distance-Based Spatial Weights</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="topics-covered-9.html"><a href="topics-covered-9.html"><i class="fa fa-check"></i><b>11.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="11.2" data-path="distance-metrics.html"><a href="distance-metrics.html"><i class="fa fa-check"></i><b>11.2</b> Distance metrics</a>
+<ul>
+<li class="chapter" data-level="11.2.1" data-path="distance-metrics.html"><a href="distance-metrics.html#distance-in-a-cartesian-coordinate-system"><i class="fa fa-check"></i><b>11.2.1</b> Distance in a Cartesian coordinate system</a></li>
+<li class="chapter" data-level="11.2.2" data-path="distance-metrics.html"><a href="distance-metrics.html#great-circle-distance"><i class="fa fa-check"></i><b>11.2.2</b> Great circle distance</a></li>
+<li class="chapter" data-level="11.2.3" data-path="distance-metrics.html"><a href="distance-metrics.html#general-distance"><i class="fa fa-check"></i><b>11.2.3</b> General distance</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="distancebasedweights.html"><a href="distancebasedweights.html"><i class="fa fa-check"></i><b>11.3</b> Distance-Based Weights</a>
+<ul>
+<li class="chapter" data-level="11.3.1" data-path="distancebasedweights.html"><a href="distancebasedweights.html#distancebandweights"><i class="fa fa-check"></i><b>11.3.1</b> Distance-band weights</a></li>
+<li class="chapter" data-level="11.3.2" data-path="distancebasedweights.html"><a href="distancebasedweights.html#knnweights"><i class="fa fa-check"></i><b>11.3.2</b> K-nearest neighbor weights</a></li>
+<li class="chapter" data-level="11.3.3" data-path="distancebasedweights.html"><a href="distancebasedweights.html#general-distance-weights"><i class="fa fa-check"></i><b>11.3.3</b> General distance weights</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4" data-path="distancewtimplementation.html"><a href="distancewtimplementation.html"><i class="fa fa-check"></i><b>11.4</b> Implementation</a>
+<ul>
+<li class="chapter" data-level="11.4.1" data-path="distancewtimplementation.html"><a href="distancewtimplementation.html#distance-band-weights"><i class="fa fa-check"></i><b>11.4.1</b> Distance-band weights</a>
+<ul>
+<li class="chapter" data-level="11.4.1.1" data-path="distancewtimplementation.html"><a href="distancewtimplementation.html#gwt-file"><i class="fa fa-check"></i><b>11.4.1.1</b> GWT file</a></li>
+<li class="chapter" data-level="11.4.1.2" data-path="distancewtimplementation.html"><a href="distancewtimplementation.html#weights-characteristics"><i class="fa fa-check"></i><b>11.4.1.2</b> Weights characteristics</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4.2" data-path="distancewtimplementation.html"><a href="distancewtimplementation.html#weightsisolates"><i class="fa fa-check"></i><b>11.4.2</b> Isolates</a>
+<ul>
+<li class="chapter" data-level="11.4.2.1" data-path="distancewtimplementation.html"><a href="distancewtimplementation.html#how-to-deal-with-isolates"><i class="fa fa-check"></i><b>11.4.2.1</b> How to deal with isolates</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4.3" data-path="distancewtimplementation.html"><a href="distancewtimplementation.html#k-nearest-neighbor-weights"><i class="fa fa-check"></i><b>11.4.3</b> K-nearest neighbor weights</a>
+<ul>
+<li class="chapter" data-level="11.4.3.1" data-path="distancewtimplementation.html"><a href="distancewtimplementation.html#weights-characteristics-1"><i class="fa fa-check"></i><b>11.4.3.1</b> Weights characteristics</a></li>
+<li class="chapter" data-level="11.4.3.2" data-path="distancewtimplementation.html"><a href="distancewtimplementation.html#caveat"><i class="fa fa-check"></i><b>11.4.3.2</b> Caveat</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4.4" data-path="distancewtimplementation.html"><a href="distancewtimplementation.html#generaldistanceweights"><i class="fa fa-check"></i><b>11.4.4</b> General distance matrix</a></li>
+</ul></li>
+<li class="chapter" data-level="11.5" data-path="broadening-the-concept-of-contiguity.html"><a href="broadening-the-concept-of-contiguity.html"><i class="fa fa-check"></i><b>11.5</b> Broadening the Concept of Contiguity</a>
+<ul>
+<li class="chapter" data-level="11.5.1" data-path="broadening-the-concept-of-contiguity.html"><a href="broadening-the-concept-of-contiguity.html#contigpoints"><i class="fa fa-check"></i><b>11.5.1</b> Contiguity-based weights for points</a>
+<ul>
+<li class="chapter" data-level="11.5.1.1" data-path="broadening-the-concept-of-contiguity.html"><a href="broadening-the-concept-of-contiguity.html#weights-characteristics-2"><i class="fa fa-check"></i><b>11.5.1.1</b> Weights characteristics</a></li>
+</ul></li>
+<li class="chapter" data-level="11.5.2" data-path="broadening-the-concept-of-contiguity.html"><a href="broadening-the-concept-of-contiguity.html#distance-based-weights-for-polygons"><i class="fa fa-check"></i><b>11.5.2</b> Distance-based weights for polygons</a></li>
+<li class="chapter" data-level="11.5.3" data-path="broadening-the-concept-of-contiguity.html"><a href="broadening-the-concept-of-contiguity.html#blockweights"><i class="fa fa-check"></i><b>11.5.3</b> Block weights</a>
+<ul>
+<li class="chapter" data-level="11.5.3.1" data-path="broadening-the-concept-of-contiguity.html"><a href="broadening-the-concept-of-contiguity.html#weights-characteristics-3"><i class="fa fa-check"></i><b>11.5.3.1</b> Weights characteristics</a></li>
+</ul></li>
+<li class="chapter" data-level="11.5.4" data-path="broadening-the-concept-of-contiguity.html"><a href="broadening-the-concept-of-contiguity.html#spacetimeweights"><i class="fa fa-check"></i><b>11.5.4</b> Space-time weights</a></li>
+</ul></li>
+<li class="chapter" data-level="11.6" data-path="manipulating-weights.html"><a href="manipulating-weights.html"><i class="fa fa-check"></i><b>11.6</b> Manipulating Weights</a>
+<ul>
+<li class="chapter" data-level="11.6.1" data-path="manipulating-weights.html"><a href="manipulating-weights.html#weightsintersection"><i class="fa fa-check"></i><b>11.6.1</b> Set operations</a></li>
+<li class="chapter" data-level="11.6.2" data-path="manipulating-weights.html"><a href="manipulating-weights.html#weightsmakesymmetric"><i class="fa fa-check"></i><b>11.6.2</b> Make symmetric</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="CHAdvancedweights.html"><a href="CHAdvancedweights.html"><i class="fa fa-check"></i><b>12</b> Special Weights Operations</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="topics-covered-10.html"><a href="topics-covered-10.html"><i class="fa fa-check"></i><b>12.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="12.2" data-path="spatial-weights-as-distance-functions.html"><a href="spatial-weights-as-distance-functions.html"><i class="fa fa-check"></i><b>12.2</b> Spatial Weights as Distance Functions</a>
+<ul>
+<li class="chapter" data-level="12.2.1" data-path="spatial-weights-as-distance-functions.html"><a href="spatial-weights-as-distance-functions.html#invdistanceweights"><i class="fa fa-check"></i><b>12.2.1</b> Inverse Distance Weights</a>
+<ul>
+<li class="chapter" data-level="12.2.1.1" data-path="spatial-weights-as-distance-functions.html"><a href="spatial-weights-as-distance-functions.html#implementation-8"><i class="fa fa-check"></i><b>12.2.1.1</b> Implementation</a></li>
+<li class="chapter" data-level="12.2.1.2" data-path="spatial-weights-as-distance-functions.html"><a href="spatial-weights-as-distance-functions.html#knninversedist"><i class="fa fa-check"></i><b>12.2.1.2</b> K-nearest neighbor inverse distance weights</a></li>
+<li class="chapter" data-level="12.2.1.3" data-path="spatial-weights-as-distance-functions.html"><a href="spatial-weights-as-distance-functions.html#gwt-file-1"><i class="fa fa-check"></i><b>12.2.1.3</b> GWT file</a></li>
+</ul></li>
+<li class="chapter" data-level="12.2.2" data-path="spatial-weights-as-distance-functions.html"><a href="spatial-weights-as-distance-functions.html#kernelweights"><i class="fa fa-check"></i><b>12.2.2</b> Kernel Weights</a>
+<ul>
+<li class="chapter" data-level="12.2.2.1" data-path="spatial-weights-as-distance-functions.html"><a href="spatial-weights-as-distance-functions.html#specification-of-the-kernel-weights"><i class="fa fa-check"></i><b>12.2.2.1</b> Specification of the kernel weights</a></li>
+<li class="chapter" data-level="12.2.2.2" data-path="spatial-weights-as-distance-functions.html"><a href="spatial-weights-as-distance-functions.html#creating-kernel-weights"><i class="fa fa-check"></i><b>12.2.2.2</b> Creating kernel weights</a></li>
+<li class="chapter" data-level="12.2.2.3" data-path="spatial-weights-as-distance-functions.html"><a href="spatial-weights-as-distance-functions.html#characteristics-of-kernel-weights"><i class="fa fa-check"></i><b>12.2.2.3</b> Characteristics of kernel weights</a></li>
+<li class="chapter" data-level="12.2.2.4" data-path="spatial-weights-as-distance-functions.html"><a href="spatial-weights-as-distance-functions.html#kwt-file"><i class="fa fa-check"></i><b>12.2.2.4</b> KWT file</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="spatial-transformations.html"><a href="spatial-transformations.html"><i class="fa fa-check"></i><b>12.3</b> Spatial Transformations</a>
+<ul>
+<li class="chapter" data-level="12.3.1" data-path="spatial-transformations.html"><a href="spatial-transformations.html#spatiallylaggedvars"><i class="fa fa-check"></i><b>12.3.1</b> Spatially Lagged Variables</a>
+<ul>
+<li class="chapter" data-level="12.3.1.1" data-path="spatial-transformations.html"><a href="spatial-transformations.html#creatingspatiallag"><i class="fa fa-check"></i><b>12.3.1.1</b> Creating a spatially lagged variable</a></li>
+<li class="chapter" data-level="12.3.1.2" data-path="spatial-transformations.html"><a href="spatial-transformations.html#spatial-lag-as-a-sum-of-neighboring-values"><i class="fa fa-check"></i><b>12.3.1.2</b> Spatial lag as a sum of neighboring values</a></li>
+<li class="chapter" data-level="12.3.1.3" data-path="spatial-transformations.html"><a href="spatial-transformations.html#medianspatiallag"><i class="fa fa-check"></i><b>12.3.1.3</b> Median spatial lag</a></li>
+<li class="chapter" data-level="12.3.1.4" data-path="spatial-transformations.html"><a href="spatial-transformations.html#spatialwindowtransform"><i class="fa fa-check"></i><b>12.3.1.4</b> Spatial window transformations</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3.2" data-path="spatial-transformations.html"><a href="spatial-transformations.html#using-inverse-distance-weights---potential-measure"><i class="fa fa-check"></i><b>12.3.2</b> Using inverse distance weights - <em>potential</em> measure</a>
+<ul>
+<li class="chapter" data-level="12.3.2.1" data-path="spatial-transformations.html"><a href="spatial-transformations.html#default-inverse-distance-weights-setting"><i class="fa fa-check"></i><b>12.3.2.1</b> Default inverse distance weights setting</a></li>
+<li class="chapter" data-level="12.3.2.2" data-path="spatial-transformations.html"><a href="spatial-transformations.html#row-standardized-inverse-distance-weights"><i class="fa fa-check"></i><b>12.3.2.2</b> Row-standardized inverse distance weights</a></li>
+<li class="chapter" data-level="12.3.2.3" data-path="spatial-transformations.html"><a href="spatial-transformations.html#spatial-window-inverse-distance-sum"><i class="fa fa-check"></i><b>12.3.2.3</b> Spatial window inverse distance sum</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3.3" data-path="spatial-transformations.html"><a href="spatial-transformations.html#kernelspatiallag"><i class="fa fa-check"></i><b>12.3.3</b> Using kernel weights</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="spatialratesmoothing.html"><a href="spatialratesmoothing.html"><i class="fa fa-check"></i><b>12.4</b> Spatial Weights in Rate Smoothing</a>
+<ul>
+<li class="chapter" data-level="12.4.0.1" data-path="spatialratesmoothing.html"><a href="spatialratesmoothing.html#oaxacadisability"><i class="fa fa-check"></i><b>12.4.0.1</b> Oaxaca disability rate</a></li>
+<li class="chapter" data-level="12.4.1" data-path="spatialratesmoothing.html"><a href="spatialratesmoothing.html#spatial-rate-smoothing"><i class="fa fa-check"></i><b>12.4.1</b> Spatial rate smoothing</a>
+<ul>
+<li class="chapter" data-level="12.4.1.1" data-path="spatialratesmoothing.html"><a href="spatialratesmoothing.html#spatialsmoothratemap"><i class="fa fa-check"></i><b>12.4.1.1</b> Spatially smoothed rate map</a></li>
+<li class="chapter" data-level="12.4.1.2" data-path="spatialratesmoothing.html"><a href="spatialratesmoothing.html#spatialsmoothintable"><i class="fa fa-check"></i><b>12.4.1.2</b> Spatially smoothed rate in table</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4.2" data-path="spatialratesmoothing.html"><a href="spatialratesmoothing.html#spatial-empirical-bayes-smoothing"><i class="fa fa-check"></i><b>12.4.2</b> Spatial Empirical Bayes Smoothing</a>
+<ul>
+<li class="chapter" data-level="12.4.2.1" data-path="spatialratesmoothing.html"><a href="spatialratesmoothing.html#spatial-empirical-bayes-smoothed-rate-map"><i class="fa fa-check"></i><b>12.4.2.1</b> Spatial Empirical Bayes smoothed rate map</a></li>
+<li class="chapter" data-level="12.4.2.2" data-path="spatialratesmoothing.html"><a href="spatialratesmoothing.html#spatial-empirical-bayes-smoothed-rate-in-table"><i class="fa fa-check"></i><b>12.4.2.2</b> Spatial Empirical Bayes smoothed rate in table</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>IV Global Spatial Autocorrelation</b></span></li>
+<li class="chapter" data-level="13" data-path="CHglobalsa.html"><a href="CHglobalsa.html"><i class="fa fa-check"></i><b>13</b> Spatial Autocorrelation</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="topics-covered-11.html"><a href="topics-covered-11.html"><i class="fa fa-check"></i><b>13.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="13.2" data-path="spatial-randomness.html"><a href="spatial-randomness.html"><i class="fa fa-check"></i><b>13.2</b> Spatial Randomness</a>
+<ul>
+<li class="chapter" data-level="13.2.1" data-path="spatial-randomness.html"><a href="spatial-randomness.html#parametric-approach"><i class="fa fa-check"></i><b>13.2.1</b> Parametric approach</a></li>
+<li class="chapter" data-level="13.2.2" data-path="spatial-randomness.html"><a href="spatial-randomness.html#randomization"><i class="fa fa-check"></i><b>13.2.2</b> Randomization</a></li>
+<li class="chapter" data-level="13.2.3" data-path="spatial-randomness.html"><a href="spatial-randomness.html#simulating-spatial-randomness"><i class="fa fa-check"></i><b>13.2.3</b> Simulating spatial randomness</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="positive-and-negative-spatial-autocorrelation.html"><a href="positive-and-negative-spatial-autocorrelation.html"><i class="fa fa-check"></i><b>13.3</b> Positive and negative spatial autocorrelation</a>
+<ul>
+<li class="chapter" data-level="13.3.1" data-path="positive-and-negative-spatial-autocorrelation.html"><a href="positive-and-negative-spatial-autocorrelation.html#positive-spatial-autocorrelation"><i class="fa fa-check"></i><b>13.3.1</b> Positive spatial autocorrelation</a></li>
+<li class="chapter" data-level="13.3.2" data-path="positive-and-negative-spatial-autocorrelation.html"><a href="positive-and-negative-spatial-autocorrelation.html#negative-spatial-autocorrelation"><i class="fa fa-check"></i><b>13.3.2</b> Negative spatial autocorrelation</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="spatialautostat.html"><a href="spatialautostat.html"><i class="fa fa-check"></i><b>13.4</b> Spatial Autocorrelation Statistic</a>
+<ul>
+<li class="chapter" data-level="13.4.1" data-path="spatialautostat.html"><a href="spatialautostat.html#attribute-similarity"><i class="fa fa-check"></i><b>13.4.1</b> Attribute similarity</a></li>
+<li class="chapter" data-level="13.4.2" data-path="spatialautostat.html"><a href="spatialautostat.html#locationalsimilarity"><i class="fa fa-check"></i><b>13.4.2</b> Locational similarity</a></li>
+<li class="chapter" data-level="13.4.3" data-path="spatialautostat.html"><a href="spatialautostat.html#examplesautostats"><i class="fa fa-check"></i><b>13.4.3</b> Examples of spatial autocorrelation statistics</a>
+<ul>
+<li class="chapter" data-level="13.4.3.1" data-path="spatialautostat.html"><a href="spatialautostat.html#cross-product"><i class="fa fa-check"></i><b>13.4.3.1</b> Cross-product</a></li>
+<li class="chapter" data-level="13.4.3.2" data-path="spatialautostat.html"><a href="spatialautostat.html#gearyc"><i class="fa fa-check"></i><b>13.4.3.2</b> Squared difference</a></li>
+<li class="chapter" data-level="13.4.3.3" data-path="spatialautostat.html"><a href="spatialautostat.html#absolute-difference"><i class="fa fa-check"></i><b>13.4.3.3</b> Absolute difference</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="morans-i.html"><a href="morans-i.html"><i class="fa fa-check"></i><b>13.5</b> Moran’s I</a>
+<ul>
+<li class="chapter" data-level="13.5.1" data-path="morans-i.html"><a href="morans-i.html#moransIstatistic"><i class="fa fa-check"></i><b>13.5.1</b> Statistic</a></li>
+<li class="chapter" data-level="13.5.2" data-path="morans-i.html"><a href="morans-i.html#inference"><i class="fa fa-check"></i><b>13.5.2</b> Inference</a>
+<ul>
+<li class="chapter" data-level="13.5.2.1" data-path="morans-i.html"><a href="morans-i.html#analytical-inference"><i class="fa fa-check"></i><b>13.5.2.1</b> Analytical inference</a></li>
+<li class="chapter" data-level="13.5.2.2" data-path="morans-i.html"><a href="morans-i.html#permutationinference"><i class="fa fa-check"></i><b>13.5.2.2</b> Permutation inference</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5.3" data-path="morans-i.html"><a href="morans-i.html#MoransIinterp"><i class="fa fa-check"></i><b>13.5.3</b> Interpretation</a>
+<ul>
+<li class="chapter" data-level="13.5.3.1" data-path="morans-i.html"><a href="morans-i.html#comparison-of-morans-i-results"><i class="fa fa-check"></i><b>13.5.3.1</b> Comparison of Moran’s I results</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5.4" data-path="morans-i.html"><a href="morans-i.html#moran-scatter-plot"><i class="fa fa-check"></i><b>13.5.4</b> Moran scatter plot</a>
+<ul>
+<li class="chapter" data-level="13.5.4.1" data-path="morans-i.html"><a href="morans-i.html#categories-of-spatial-autocorrelation"><i class="fa fa-check"></i><b>13.5.4.1</b> Categories of spatial autocorrelation</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="vizmoranscatterplot.html"><a href="vizmoranscatterplot.html"><i class="fa fa-check"></i><b>13.6</b> Visualizing spatial autocorrelation with the Moran scatter plot</a>
+<ul>
+<li class="chapter" data-level="13.6.1" data-path="vizmoranscatterplot.html"><a href="vizmoranscatterplot.html#creating-a-moran-scatter-plot"><i class="fa fa-check"></i><b>13.6.1</b> Creating a Moran scatter plot</a></li>
+<li class="chapter" data-level="13.6.2" data-path="vizmoranscatterplot.html"><a href="vizmoranscatterplot.html#moran-scatter-plot-options"><i class="fa fa-check"></i><b>13.6.2</b> Moran scatter plot options</a>
+<ul>
+<li class="chapter" data-level="13.6.2.1" data-path="vizmoranscatterplot.html"><a href="vizmoranscatterplot.html#randomization-1"><i class="fa fa-check"></i><b>13.6.2.1</b> Randomization</a></li>
+<li class="chapter" data-level="13.6.2.2" data-path="vizmoranscatterplot.html"><a href="vizmoranscatterplot.html#reproducing-results---the-random-seed"><i class="fa fa-check"></i><b>13.6.2.2</b> Reproducing results - the random seed</a></li>
+<li class="chapter" data-level="13.6.2.3" data-path="vizmoranscatterplot.html"><a href="vizmoranscatterplot.html#lowess-smoother"><i class="fa fa-check"></i><b>13.6.2.3</b> LOWESS smoother</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6.3" data-path="vizmoranscatterplot.html"><a href="vizmoranscatterplot.html#brushing-the-moran-scatter-plot"><i class="fa fa-check"></i><b>13.6.3</b> Brushing the Moran scatter plot</a>
+<ul>
+<li class="chapter" data-level="13.6.3.1" data-path="vizmoranscatterplot.html"><a href="vizmoranscatterplot.html#static-and-dynamic-spatial-weights"><i class="fa fa-check"></i><b>13.6.3.1</b> Static and dynamic spatial weights</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="CHadvancedglobalsa.html"><a href="CHadvancedglobalsa.html"><i class="fa fa-check"></i><b>14</b> Advanced Global Spatial Autocorrelation</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="topics-covered-12.html"><a href="topics-covered-12.html"><i class="fa fa-check"></i><b>14.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="14.2" data-path="specialized-moran-scatter-plots.html"><a href="specialized-moran-scatter-plots.html"><i class="fa fa-check"></i><b>14.2</b> Specialized Moran Scatter Plots</a>
+<ul>
+<li class="chapter" data-level="14.2.1" data-path="specialized-moran-scatter-plots.html"><a href="specialized-moran-scatter-plots.html#differentialmorani"><i class="fa fa-check"></i><b>14.2.1</b> Differential Moran scatter plot</a>
+<ul>
+<li class="chapter" data-level="14.2.1.1" data-path="specialized-moran-scatter-plots.html"><a href="specialized-moran-scatter-plots.html#implementation-9"><i class="fa fa-check"></i><b>14.2.1.1</b> Implementation</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2.2" data-path="specialized-moran-scatter-plots.html"><a href="specialized-moran-scatter-plots.html#EBmoranscatter"><i class="fa fa-check"></i><b>14.2.2</b> Moran scatter plot for EB rates</a>
+<ul>
+<li class="chapter" data-level="14.2.2.1" data-path="specialized-moran-scatter-plots.html"><a href="specialized-moran-scatter-plots.html#ebmoranimplementation"><i class="fa fa-check"></i><b>14.2.2.1</b> Implementation</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14.3" data-path="bivariate-spatial-correlation.html"><a href="bivariate-spatial-correlation.html"><i class="fa fa-check"></i><b>14.3</b> Bivariate Spatial Correlation</a>
+<ul>
+<li class="chapter" data-level="14.3.1" data-path="bivariate-spatial-correlation.html"><a href="bivariate-spatial-correlation.html#bivariatemorscat"><i class="fa fa-check"></i><b>14.3.1</b> Bivariate Moran scatter plot</a>
+<ul>
+<li class="chapter" data-level="14.3.1.1" data-path="bivariate-spatial-correlation.html"><a href="bivariate-spatial-correlation.html#creating-a-bivariate-moran-scatter-plot"><i class="fa fa-check"></i><b>14.3.1.1</b> Creating a bivariate Moran scatter plot</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="14.4" data-path="manyfacesspacetime.html"><a href="manyfacesspacetime.html"><i class="fa fa-check"></i><b>14.4</b> The many faces of space-time correlation</a>
+<ul>
+<li class="chapter" data-level="14.4.1" data-path="manyfacesspacetime.html"><a href="manyfacesspacetime.html#serial-temporal-correlation"><i class="fa fa-check"></i><b>14.4.1</b> Serial (temporal) correlation</a></li>
+<li class="chapter" data-level="14.4.2" data-path="manyfacesspacetime.html"><a href="manyfacesspacetime.html#serial-temporal-correlation-between-spatial-lags"><i class="fa fa-check"></i><b>14.4.2</b> Serial (temporal) correlation between spatial lags</a></li>
+<li class="chapter" data-level="14.4.3" data-path="manyfacesspacetime.html"><a href="manyfacesspacetime.html#space-time-regression"><i class="fa fa-check"></i><b>14.4.3</b> Space-time regression</a></li>
+<li class="chapter" data-level="14.4.4" data-path="manyfacesspacetime.html"><a href="manyfacesspacetime.html#serial-and-space-time-regression"><i class="fa fa-check"></i><b>14.4.4</b> Serial and space-time regression</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="CHnonparametricspauto.html"><a href="CHnonparametricspauto.html"><i class="fa fa-check"></i><b>15</b> Nonparametric Spatial Autocorrelation</a>
+<ul>
+<li class="chapter" data-level="15.1" data-path="topics-covered-13.html"><a href="topics-covered-13.html"><i class="fa fa-check"></i><b>15.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="15.2" data-path="non-parametric-approaches.html"><a href="non-parametric-approaches.html"><i class="fa fa-check"></i><b>15.2</b> Non-Parametric Approaches</a></li>
+<li class="chapter" data-level="15.3" data-path="spatial-correlogram.html"><a href="spatial-correlogram.html"><i class="fa fa-check"></i><b>15.3</b> Spatial correlogram</a>
+<ul>
+<li class="chapter" data-level="15.3.1" data-path="spatial-correlogram.html"><a href="spatial-correlogram.html#creating-a-spatial-correlogram"><i class="fa fa-check"></i><b>15.3.1</b> Creating a spatial correlogram</a>
+<ul>
+<li class="chapter" data-level="15.3.1.1" data-path="spatial-correlogram.html"><a href="spatial-correlogram.html#interpretation"><i class="fa fa-check"></i><b>15.3.1.1</b> Interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="15.3.2" data-path="spatial-correlogram.html"><a href="spatial-correlogram.html#correlogramoptions"><i class="fa fa-check"></i><b>15.3.2</b> Spatial correlogram options</a>
+<ul>
+<li class="chapter" data-level="15.3.2.1" data-path="spatial-correlogram.html"><a href="spatial-correlogram.html#correlogramoptions1"><i class="fa fa-check"></i><b>15.3.2.1</b> Maximum distance and number of bins</a></li>
+<li class="chapter" data-level="15.3.2.2" data-path="spatial-correlogram.html"><a href="spatial-correlogram.html#correlogramoptions2"><i class="fa fa-check"></i><b>15.3.2.2</b> Random sampling</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="15.4" data-path="smoothed-distance-scatter-plot.html"><a href="smoothed-distance-scatter-plot.html"><i class="fa fa-check"></i><b>15.4</b> Smoothed distance scatter plot</a>
+<ul>
+<li class="chapter" data-level="15.4.1" data-path="smoothed-distance-scatter-plot.html"><a href="smoothed-distance-scatter-plot.html#scatplotmultivariate"><i class="fa fa-check"></i><b>15.4.1</b> Multivariate extension</a></li>
+<li class="chapter" data-level="15.4.2" data-path="smoothed-distance-scatter-plot.html"><a href="smoothed-distance-scatter-plot.html#creating-a-smoothed-distance-scatter-plot"><i class="fa fa-check"></i><b>15.4.2</b> Creating a smoothed distance scatter plot</a></li>
+<li class="chapter" data-level="15.4.3" data-path="smoothed-distance-scatter-plot.html"><a href="smoothed-distance-scatter-plot.html#smoothdistscatoptions"><i class="fa fa-check"></i><b>15.4.3</b> Smoothed distance scatter plot options</a>
+<ul>
+<li class="chapter" data-level="15.4.3.1" data-path="smoothed-distance-scatter-plot.html"><a href="smoothed-distance-scatter-plot.html#loesssetup"><i class="fa fa-check"></i><b>15.4.3.1</b> Loess settings</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>V Local Spatial Autocorrelation</b></span></li>
+<li class="chapter" data-level="16" data-path="CHLISA.html"><a href="CHLISA.html"><i class="fa fa-check"></i><b>16</b> LISA and Local Moran</a>
+<ul>
+<li class="chapter" data-level="16.1" data-path="topics-covered-14.html"><a href="topics-covered-14.html"><i class="fa fa-check"></i><b>16.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="16.2" data-path="LISAprinciple.html"><a href="LISAprinciple.html"><i class="fa fa-check"></i><b>16.2</b> LISA Principle</a></li>
+<li class="chapter" data-level="16.3" data-path="local-moran.html"><a href="local-moran.html"><i class="fa fa-check"></i><b>16.3</b> Local Moran</a>
+<ul>
+<li class="chapter" data-level="16.3.1" data-path="local-moran.html"><a href="local-moran.html#formulation"><i class="fa fa-check"></i><b>16.3.1</b> Formulation</a></li>
+<li class="chapter" data-level="16.3.2" data-path="local-moran.html"><a href="local-moran.html#implementation-10"><i class="fa fa-check"></i><b>16.3.2</b> Implementation</a>
+<ul>
+<li class="chapter" data-level="16.3.2.1" data-path="local-moran.html"><a href="local-moran.html#significance-map-and-cluster-map"><i class="fa fa-check"></i><b>16.3.2.1</b> Significance map and cluster map</a></li>
+<li class="chapter" data-level="16.3.2.2" data-path="local-moran.html"><a href="local-moran.html#randomization-options"><i class="fa fa-check"></i><b>16.3.2.2</b> Randomization options</a></li>
+<li class="chapter" data-level="16.3.2.3" data-path="local-moran.html"><a href="local-moran.html#saving-the-local-moran-statistic"><i class="fa fa-check"></i><b>16.3.2.3</b> Saving the Local Moran statistic</a></li>
+<li class="chapter" data-level="16.3.2.4" data-path="local-moran.html"><a href="local-moran.html#other-options"><i class="fa fa-check"></i><b>16.3.2.4</b> Other options</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="16.4" data-path="clustersandoutliers.html"><a href="clustersandoutliers.html"><i class="fa fa-check"></i><b>16.4</b> Clusters and Spatial Outliers</a>
+<ul>
+<li class="chapter" data-level="16.4.1" data-path="clustersandoutliers.html"><a href="clustersandoutliers.html#clusters"><i class="fa fa-check"></i><b>16.4.1</b> Clusters</a></li>
+<li class="chapter" data-level="16.4.2" data-path="clustersandoutliers.html"><a href="clustersandoutliers.html#spatial-outliers"><i class="fa fa-check"></i><b>16.4.2</b> Spatial Outliers</a></li>
+</ul></li>
+<li class="chapter" data-level="16.5" data-path="sigandinterpretation.html"><a href="sigandinterpretation.html"><i class="fa fa-check"></i><b>16.5</b> Significance and Interpretation</a>
+<ul>
+<li class="chapter" data-level="16.5.1" data-path="sigandinterpretation.html"><a href="sigandinterpretation.html#multiple-comparisons"><i class="fa fa-check"></i><b>16.5.1</b> Multiple Comparisons</a>
+<ul>
+<li class="chapter" data-level="16.5.1.1" data-path="sigandinterpretation.html"><a href="sigandinterpretation.html#adjusting-p-values"><i class="fa fa-check"></i><b>16.5.1.1</b> Adjusting p-values</a></li>
+<li class="chapter" data-level="16.5.1.2" data-path="sigandinterpretation.html"><a href="sigandinterpretation.html#bonferroni-bound"><i class="fa fa-check"></i><b>16.5.1.2</b> Bonferroni bound</a></li>
+<li class="chapter" data-level="16.5.1.3" data-path="sigandinterpretation.html"><a href="sigandinterpretation.html#false-discovery-rate-fdr"><i class="fa fa-check"></i><b>16.5.1.3</b> False Discovery Rate (FDR)</a></li>
+</ul></li>
+<li class="chapter" data-level="16.5.2" data-path="sigandinterpretation.html"><a href="sigandinterpretation.html#interpretation-of-significance"><i class="fa fa-check"></i><b>16.5.2</b> Interpretation of Significance</a></li>
+<li class="chapter" data-level="16.5.3" data-path="sigandinterpretation.html"><a href="sigandinterpretation.html#clusterinterpretation"><i class="fa fa-check"></i><b>16.5.3</b> Interpretation of Clusters</a></li>
+</ul></li>
+<li class="chapter" data-level="16.6" data-path="condclustermap.html"><a href="condclustermap.html"><i class="fa fa-check"></i><b>16.6</b> Conditional Local Cluster Maps</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="chotherlisa.html"><a href="chotherlisa.html"><i class="fa fa-check"></i><b>17</b> Other Local Spatial Autocorrelation Statistics</a>
+<ul>
+<li class="chapter" data-level="17.1" data-path="topics-covered-15.html"><a href="topics-covered-15.html"><i class="fa fa-check"></i><b>17.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="17.2" data-path="extensions-of-the-local-moran.html"><a href="extensions-of-the-local-moran.html"><i class="fa fa-check"></i><b>17.2</b> Extensions of the Local Moran</a>
+<ul>
+<li class="chapter" data-level="17.2.1" data-path="extensions-of-the-local-moran.html"><a href="extensions-of-the-local-moran.html#median-local-moran"><i class="fa fa-check"></i><b>17.2.1</b> Median Local Moran</a>
+<ul>
+<li class="chapter" data-level="17.2.1.1" data-path="extensions-of-the-local-moran.html"><a href="extensions-of-the-local-moran.html#implementation-11"><i class="fa fa-check"></i><b>17.2.1.1</b> Implementation</a></li>
+<li class="chapter" data-level="17.2.1.2" data-path="extensions-of-the-local-moran.html"><a href="extensions-of-the-local-moran.html#clusters-and-spatial-outliers"><i class="fa fa-check"></i><b>17.2.1.2</b> Clusters and spatial outliers</a></li>
+<li class="chapter" data-level="17.2.1.3" data-path="extensions-of-the-local-moran.html"><a href="extensions-of-the-local-moran.html#median-moran-cluster-map"><i class="fa fa-check"></i><b>17.2.1.3</b> Median Moran cluster map</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2.2" data-path="extensions-of-the-local-moran.html"><a href="extensions-of-the-local-moran.html#differential-local-moran"><i class="fa fa-check"></i><b>17.2.2</b> Differential Local Moran</a>
+<ul>
+<li class="chapter" data-level="17.2.2.1" data-path="extensions-of-the-local-moran.html"><a href="extensions-of-the-local-moran.html#implementation-12"><i class="fa fa-check"></i><b>17.2.2.1</b> Implementation</a></li>
+<li class="chapter" data-level="17.2.2.2" data-path="extensions-of-the-local-moran.html"><a href="extensions-of-the-local-moran.html#interpretation-1"><i class="fa fa-check"></i><b>17.2.2.2</b> Interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2.3" data-path="extensions-of-the-local-moran.html"><a href="extensions-of-the-local-moran.html#local-moran-with-eb-rate"><i class="fa fa-check"></i><b>17.2.3</b> Local Moran with EB Rate</a>
+<ul>
+<li class="chapter" data-level="17.2.3.1" data-path="extensions-of-the-local-moran.html"><a href="extensions-of-the-local-moran.html#implementation-13"><i class="fa fa-check"></i><b>17.2.3.1</b> Implementation</a></li>
+<li class="chapter" data-level="17.2.3.2" data-path="extensions-of-the-local-moran.html"><a href="extensions-of-the-local-moran.html#saving-the-results"><i class="fa fa-check"></i><b>17.2.3.2</b> Saving the results</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="local-geary.html"><a href="local-geary.html"><i class="fa fa-check"></i><b>17.3</b> Local Geary</a>
+<ul>
+<li class="chapter" data-level="17.3.1" data-path="local-geary.html"><a href="local-geary.html#implementation-14"><i class="fa fa-check"></i><b>17.3.1</b> Implementation</a>
+<ul>
+<li class="chapter" data-level="17.3.1.1" data-path="local-geary.html"><a href="local-geary.html#localGsave"><i class="fa fa-check"></i><b>17.3.1.1</b> Saving the results</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3.2" data-path="local-geary.html"><a href="local-geary.html#LGearyclusters"><i class="fa fa-check"></i><b>17.3.2</b> Clusters and spatial outliers</a></li>
+<li class="chapter" data-level="17.3.3" data-path="local-geary.html"><a href="local-geary.html#GearyandLocalMoran"><i class="fa fa-check"></i><b>17.3.3</b> Comparing Local Geary and Local Moran</a>
+<ul>
+<li class="chapter" data-level="17.3.3.1" data-path="local-geary.html"><a href="local-geary.html#clusters-1"><i class="fa fa-check"></i><b>17.3.3.1</b> Clusters</a></li>
+<li class="chapter" data-level="17.3.3.2" data-path="local-geary.html"><a href="local-geary.html#spatial-outliers-1"><i class="fa fa-check"></i><b>17.3.3.2</b> Spatial outliers</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17.4" data-path="getis-ord-statistics.html"><a href="getis-ord-statistics.html"><i class="fa fa-check"></i><b>17.4</b> Getis-Ord Statistics</a>
+<ul>
+<li class="chapter" data-level="17.4.1" data-path="getis-ord-statistics.html"><a href="getis-ord-statistics.html#implementation-15"><i class="fa fa-check"></i><b>17.4.1</b> Implementation</a>
+<ul>
+<li class="chapter" data-level="17.4.1.1" data-path="getis-ord-statistics.html"><a href="getis-ord-statistics.html#saving-the-results-1"><i class="fa fa-check"></i><b>17.4.1.1</b> Saving the results</a></li>
+</ul></li>
+<li class="chapter" data-level="17.4.2" data-path="getis-ord-statistics.html"><a href="getis-ord-statistics.html#clusters-and-outliers"><i class="fa fa-check"></i><b>17.4.2</b> Clusters and Outliers</a></li>
+<li class="chapter" data-level="17.4.3" data-path="getis-ord-statistics.html"><a href="getis-ord-statistics.html#comparing-g-statistics-and-local-moran"><i class="fa fa-check"></i><b>17.4.3</b> Comparing G Statistics and Local Moran</a>
+<ul>
+<li class="chapter" data-level="17.4.3.1" data-path="getis-ord-statistics.html"><a href="getis-ord-statistics.html#clusters-2"><i class="fa fa-check"></i><b>17.4.3.1</b> Clusters</a></li>
+<li class="chapter" data-level="17.4.3.2" data-path="getis-ord-statistics.html"><a href="getis-ord-statistics.html#spatial-outliers-2"><i class="fa fa-check"></i><b>17.4.3.2</b> Spatial outliers</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="17.5" data-path="which-local-statistic-to-use.html"><a href="which-local-statistic-to-use.html"><i class="fa fa-check"></i><b>17.5</b> Which Local Statistic to Use?</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="CHmultilisa.html"><a href="CHmultilisa.html"><i class="fa fa-check"></i><b>18</b> Multivariate Local Spatial Autocorrelation</a>
+<ul>
+<li class="chapter" data-level="18.1" data-path="topics-covered-16.html"><a href="topics-covered-16.html"><i class="fa fa-check"></i><b>18.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="18.2" data-path="the-multivariate-spatial-autocorrelation-problem.html"><a href="the-multivariate-spatial-autocorrelation-problem.html"><i class="fa fa-check"></i><b>18.2</b> The Multivariate Spatial Autocorrelation Problem</a></li>
+<li class="chapter" data-level="18.3" data-path="bivlocalmoran.html"><a href="bivlocalmoran.html"><i class="fa fa-check"></i><b>18.3</b> Bivariate Local Moran</a>
+<ul>
+<li class="chapter" data-level="18.3.1" data-path="bivlocalmoran.html"><a href="bivlocalmoran.html#implementation-16"><i class="fa fa-check"></i><b>18.3.1</b> Implementation</a>
+<ul>
+<li class="chapter" data-level="18.3.1.1" data-path="bivlocalmoran.html"><a href="bivlocalmoran.html#univariate-description-of-two-variables"><i class="fa fa-check"></i><b>18.3.1.1</b> Univariate description of two variables</a></li>
+<li class="chapter" data-level="18.3.1.2" data-path="bivlocalmoran.html"><a href="bivlocalmoran.html#univariate-local-moran-for-each-variable"><i class="fa fa-check"></i><b>18.3.1.2</b> Univariate Local Moran for each variable</a></li>
+<li class="chapter" data-level="18.3.1.3" data-path="bivlocalmoran.html"><a href="bivlocalmoran.html#bivariate-analysis"><i class="fa fa-check"></i><b>18.3.1.3</b> Bivariate analysis</a></li>
+<li class="chapter" data-level="18.3.1.4" data-path="bivlocalmoran.html"><a href="bivlocalmoran.html#options"><i class="fa fa-check"></i><b>18.3.1.4</b> Options</a></li>
+</ul></li>
+<li class="chapter" data-level="18.3.2" data-path="bivlocalmoran.html"><a href="bivlocalmoran.html#interpretation-2"><i class="fa fa-check"></i><b>18.3.2</b> Interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="18.4" data-path="multivariate-local-geary.html"><a href="multivariate-local-geary.html"><i class="fa fa-check"></i><b>18.4</b> Multivariate Local Geary</a>
+<ul>
+<li class="chapter" data-level="18.4.1" data-path="multivariate-local-geary.html"><a href="multivariate-local-geary.html#multilocalGearyimpl"><i class="fa fa-check"></i><b>18.4.1</b> Implementation</a>
+<ul>
+<li class="chapter" data-level="18.4.1.1" data-path="multivariate-local-geary.html"><a href="multivariate-local-geary.html#univariate-analysis-of-multiple-variables"><i class="fa fa-check"></i><b>18.4.1.1</b> Univariate analysis of multiple variables</a></li>
+<li class="chapter" data-level="18.4.1.2" data-path="multivariate-local-geary.html"><a href="multivariate-local-geary.html#multivariate-local-geary-analysis"><i class="fa fa-check"></i><b>18.4.1.2</b> Multivariate Local Geary analysis</a></li>
+<li class="chapter" data-level="18.4.1.3" data-path="multivariate-local-geary.html"><a href="multivariate-local-geary.html#options-1"><i class="fa fa-check"></i><b>18.4.1.3</b> Options</a></li>
+</ul></li>
+<li class="chapter" data-level="18.4.2" data-path="multivariate-local-geary.html"><a href="multivariate-local-geary.html#interpretation-3"><i class="fa fa-check"></i><b>18.4.2</b> Interpretation</a>
+<ul>
+<li class="chapter" data-level="18.4.2.1" data-path="multivariate-local-geary.html"><a href="multivariate-local-geary.html#multivariate-clusters-and-pcp"><i class="fa fa-check"></i><b>18.4.2.1</b> Multivariate clusters and PCP</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="18.5" data-path="localneighbormatch.html"><a href="localneighbormatch.html"><i class="fa fa-check"></i><b>18.5</b> Local Neighbor Match Test</a>
+<ul>
+<li class="chapter" data-level="18.5.1" data-path="localneighbormatch.html"><a href="localneighbormatch.html#implementation-17"><i class="fa fa-check"></i><b>18.5.1</b> Implementation</a>
+<ul>
+<li class="chapter" data-level="18.5.1.1" data-path="localneighbormatch.html"><a href="localneighbormatch.html#intersection-between-connectivity-graphs"><i class="fa fa-check"></i><b>18.5.1.1</b> Intersection between connectivity graphs</a></li>
+<li class="chapter" data-level="18.5.1.2" data-path="localneighbormatch.html"><a href="localneighbormatch.html#testing-the-local-neighbor-match"><i class="fa fa-check"></i><b>18.5.1.2</b> Testing the local neighbor match</a></li>
+</ul></li>
+<li class="chapter" data-level="18.5.2" data-path="localneighbormatch.html"><a href="localneighbormatch.html#local-neighbor-match-and-multivariate-local-geary"><i class="fa fa-check"></i><b>18.5.2</b> Local neighbor match and Multivariate Local Geary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="19" data-path="CHdiscretelisa.html"><a href="CHdiscretelisa.html"><i class="fa fa-check"></i><b>19</b> LISA for Discrete Variables</a>
+<ul>
+<li class="chapter" data-level="19.1" data-path="topics-covered-17.html"><a href="topics-covered-17.html"><i class="fa fa-check"></i><b>19.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="19.2" data-path="univariate-local-join-count-statistic.html"><a href="univariate-local-join-count-statistic.html"><i class="fa fa-check"></i><b>19.2</b> Univariate Local Join Count Statistic</a>
+<ul>
+<li class="chapter" data-level="19.2.1" data-path="univariate-local-join-count-statistic.html"><a href="univariate-local-join-count-statistic.html#implementation-18"><i class="fa fa-check"></i><b>19.2.1</b> Implementation</a>
+<ul>
+<li class="chapter" data-level="19.2.1.1" data-path="univariate-local-join-count-statistic.html"><a href="univariate-local-join-count-statistic.html#local-significance-map"><i class="fa fa-check"></i><b>19.2.1.1</b> Local significance map</a></li>
+<li class="chapter" data-level="19.2.1.2" data-path="univariate-local-join-count-statistic.html"><a href="univariate-local-join-count-statistic.html#saving-the-results-2"><i class="fa fa-check"></i><b>19.2.1.2</b> Saving the results</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="19.3" data-path="bivariate-local-join-count-statistic.html"><a href="bivariate-local-join-count-statistic.html"><i class="fa fa-check"></i><b>19.3</b> Bivariate Local Join Count Statistic</a>
+<ul>
+<li class="chapter" data-level="19.3.1" data-path="bivariate-local-join-count-statistic.html"><a href="bivariate-local-join-count-statistic.html#implementation-19"><i class="fa fa-check"></i><b>19.3.1</b> Implementation</a></li>
+</ul></li>
+<li class="chapter" data-level="19.4" data-path="co-location-local-join-count-statistic.html"><a href="co-location-local-join-count-statistic.html"><i class="fa fa-check"></i><b>19.4</b> Co-Location Local Join Count Statistic</a>
+<ul>
+<li class="chapter" data-level="19.4.1" data-path="co-location-local-join-count-statistic.html"><a href="co-location-local-join-count-statistic.html#implementation-20"><i class="fa fa-check"></i><b>19.4.1</b> Implementation</a></li>
+</ul></li>
+<li class="chapter" data-level="19.5" data-path="quantile-lisa.html"><a href="quantile-lisa.html"><i class="fa fa-check"></i><b>19.5</b> Quantile LISA</a>
+<ul>
+<li class="chapter" data-level="19.5.1" data-path="quantile-lisa.html"><a href="quantile-lisa.html#implementation-21"><i class="fa fa-check"></i><b>19.5.1</b> Implementation</a></li>
+<li class="chapter" data-level="19.5.2" data-path="quantile-lisa.html"><a href="quantile-lisa.html#univariate-quantile-lisa"><i class="fa fa-check"></i><b>19.5.2</b> Univariate Quantile LISA</a></li>
+<li class="chapter" data-level="19.5.3" data-path="quantile-lisa.html"><a href="quantile-lisa.html#bivariate-and-multivariate-quantile-lisa"><i class="fa fa-check"></i><b>19.5.3</b> Bivariate and Multivariate Quantile LISA</a>
+<ul>
+<li class="chapter" data-level="19.5.3.1" data-path="quantile-lisa.html"><a href="quantile-lisa.html#spatial-outliers-3"><i class="fa fa-check"></i><b>19.5.3.1</b> Spatial Outliers</a></li>
+<li class="chapter" data-level="19.5.3.2" data-path="quantile-lisa.html"><a href="quantile-lisa.html#multivariate-co-location"><i class="fa fa-check"></i><b>19.5.3.2</b> Multivariate Co-Location</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="20" data-path="CHdensityclustering.html"><a href="CHdensityclustering.html"><i class="fa fa-check"></i><b>20</b> Density-Based Clustering Methods</a>
+<ul>
+<li class="chapter" data-level="20.1" data-path="topics-covered-18.html"><a href="topics-covered-18.html"><i class="fa fa-check"></i><b>20.1</b> Topics Covered</a></li>
+<li class="chapter" data-level="20.2" data-path="heat-map.html"><a href="heat-map.html"><i class="fa fa-check"></i><b>20.2</b> Heat Map</a>
+<ul>
+<li class="chapter" data-level="20.2.1" data-path="heat-map.html"><a href="heat-map.html#implementation-22"><i class="fa fa-check"></i><b>20.2.1</b> Implementation</a>
+<ul>
+<li class="chapter" data-level="20.2.1.1" data-path="heat-map.html"><a href="heat-map.html#options-2"><i class="fa fa-check"></i><b>20.2.1.1</b> Options</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="20.3" data-path="dbscan.html"><a href="dbscan.html"><i class="fa fa-check"></i><b>20.3</b> DBSCAN</a>
+<ul>
+<li class="chapter" data-level="20.3.1" data-path="dbscan.html"><a href="dbscan.html#important-concepts"><i class="fa fa-check"></i><b>20.3.1</b> Important Concepts</a>
+<ul>
+<li class="chapter" data-level="20.3.1.1" data-path="dbscan.html"><a href="dbscan.html#core-border-and-noise-points"><i class="fa fa-check"></i><b>20.3.1.1</b> Core, Border and Noise points</a></li>
+<li class="chapter" data-level="20.3.1.2" data-path="dbscan.html"><a href="dbscan.html#reachability"><i class="fa fa-check"></i><b>20.3.1.2</b> Reachability</a></li>
+</ul></li>
+<li class="chapter" data-level="20.3.2" data-path="dbscan.html"><a href="dbscan.html#dbscan-algorithm"><i class="fa fa-check"></i><b>20.3.2</b> DBSCAN Algorithm</a>
+<ul>
+<li class="chapter" data-level="20.3.2.1" data-path="dbscan.html"><a href="dbscan.html#illustration"><i class="fa fa-check"></i><b>20.3.2.1</b> Illustration</a></li>
+</ul></li>
+<li class="chapter" data-level="20.3.3" data-path="dbscan.html"><a href="dbscan.html#implementation-23"><i class="fa fa-check"></i><b>20.3.3</b> Implementation</a>
+<ul>
+<li class="chapter" data-level="20.3.3.1" data-path="dbscan.html"><a href="dbscan.html#cluster-map-and-summary"><i class="fa fa-check"></i><b>20.3.3.1</b> Cluster map and summary</a></li>
+<li class="chapter" data-level="20.3.3.2" data-path="dbscan.html"><a href="dbscan.html#sensitivity-analysis"><i class="fa fa-check"></i><b>20.3.3.2</b> Sensitivity analysis</a></li>
+<li class="chapter" data-level="20.3.3.3" data-path="dbscan.html"><a href="dbscan.html#border-points-and-minimum-points"><i class="fa fa-check"></i><b>20.3.3.3</b> Border points and minimum points</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="20.4" data-path="dbscanstar.html"><a href="dbscanstar.html"><i class="fa fa-check"></i><b>20.4</b> DBSCAN*</a>
+<ul>
+<li class="chapter" data-level="20.4.1" data-path="dbscanstar.html"><a href="dbscanstar.html#mutual-reachability-distance"><i class="fa fa-check"></i><b>20.4.1</b> Mutual Reachability Distance</a></li>
+<li class="chapter" data-level="20.4.2" data-path="dbscanstar.html"><a href="dbscanstar.html#implementation-24"><i class="fa fa-check"></i><b>20.4.2</b> Implementation</a>
+<ul>
+<li class="chapter" data-level="20.4.2.1" data-path="dbscanstar.html"><a href="dbscanstar.html#dbscandendrogram"><i class="fa fa-check"></i><b>20.4.2.1</b> Exploring the dendrogram</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="20.5" data-path="HDBSCAN.html"><a href="HDBSCAN.html"><i class="fa fa-check"></i><b>20.5</b> HDBSCAN</a>
+<ul>
+<li class="chapter" data-level="20.5.1" data-path="HDBSCAN.html"><a href="HDBSCAN.html#important-concepts-1"><i class="fa fa-check"></i><b>20.5.1</b> Important Concepts</a>
+<ul>
+<li class="chapter" data-level="20.5.1.1" data-path="HDBSCAN.html"><a href="HDBSCAN.html#level-set"><i class="fa fa-check"></i><b>20.5.1.1</b> Level Set</a></li>
+<li class="chapter" data-level="20.5.1.2" data-path="HDBSCAN.html"><a href="HDBSCAN.html#persistence-and-excess-of-mass"><i class="fa fa-check"></i><b>20.5.1.2</b> Persistence and Excess of Mass</a></li>
+<li class="chapter" data-level="20.5.1.3" data-path="HDBSCAN.html"><a href="HDBSCAN.html#condensed-dendrogram"><i class="fa fa-check"></i><b>20.5.1.3</b> Condensed dendrogram</a></li>
+</ul></li>
+<li class="chapter" data-level="20.5.2" data-path="HDBSCAN.html"><a href="HDBSCAN.html#hdbscan-algorithm"><i class="fa fa-check"></i><b>20.5.2</b> HDBSCAN Algorithm</a>
+<ul>
+<li class="chapter" data-level="20.5.2.1" data-path="HDBSCAN.html"><a href="HDBSCAN.html#minimum-spanning-tree"><i class="fa fa-check"></i><b>20.5.2.1</b> Minimum spanning tree</a></li>
+<li class="chapter" data-level="20.5.2.2" data-path="HDBSCAN.html"><a href="HDBSCAN.html#clusterstability"><i class="fa fa-check"></i><b>20.5.2.2</b> Cluster stability and condensed tree</a></li>
+</ul></li>
+<li class="chapter" data-level="20.5.3" data-path="HDBSCAN.html"><a href="HDBSCAN.html#cluster-membership"><i class="fa fa-check"></i><b>20.5.3</b> Cluster Membership</a></li>
+<li class="chapter" data-level="20.5.4" data-path="HDBSCAN.html"><a href="HDBSCAN.html#outliers"><i class="fa fa-check"></i><b>20.5.4</b> Outliers</a></li>
+<li class="chapter" data-level="20.5.5" data-path="HDBSCAN.html"><a href="HDBSCAN.html#implementation-25"><i class="fa fa-check"></i><b>20.5.5</b> Implementation</a>
+<ul>
+<li class="chapter" data-level="20.5.5.1" data-path="HDBSCAN.html"><a href="HDBSCAN.html#exploring-the-condensed-tree"><i class="fa fa-check"></i><b>20.5.5.1</b> Exploring the condensed tree</a></li>
+<li class="chapter" data-level="20.5.5.2" data-path="HDBSCAN.html"><a href="HDBSCAN.html#cluster-membership-1"><i class="fa fa-check"></i><b>20.5.5.2</b> Cluster membership</a></li>
+<li class="chapter" data-level="20.5.5.3" data-path="HDBSCAN.html"><a href="HDBSCAN.html#coredistmap"><i class="fa fa-check"></i><b>20.5.5.3</b> Core distance map</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+<li class="part"><span><b>VI Epilogue</b></span></li>
+<li class="chapter" data-level="21" data-path="CHlimits.html"><a href="CHlimits.html"><i class="fa fa-check"></i><b>21</b> Postscript - The Limits of Exploration</a></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="appendix-a-geoda-preference-settings.html"><a href="appendix-a-geoda-preference-settings.html"><i class="fa fa-check"></i><b>A</b> Appendix A – GeoDa Preference Settings</a></li>
+<li class="chapter" data-level="B" data-path="appendix-b-menu-structure.html"><a href="appendix-b-menu-structure.html"><i class="fa fa-check"></i><b>B</b> Appendix B – Menu Structure</a></li>
+<li class="chapter" data-level="C" data-path="appendix-c-scripting-with-geoda-via-the-geodalib-library.html"><a href="appendix-c-scripting-with-geoda-via-the-geodalib-library.html"><i class="fa fa-check"></i><b>C</b> Appendix C – Scripting with GeoDa via the geodalib Library</a></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
+<li class="divider"></li>
+<li><a href="https://bookdown.org" target="blank">Published with bookdown</a></li>
+<li> Copyright (c) 2023, Luc Anselin</li>
+<li> All Rights Reserved</li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">An Introduction to Spatial Data Science with GeoDa</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="spatial-transformations" class="section level2 hasAnchor" number="12.3">
+<h2><span class="header-section-number">12.3</span> Spatial Transformations<a href="spatial-transformations.html#spatial-transformations" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The main form of spatial transformation considered here is the so-called
+<em>spatial lag</em> operation. This summarizes the observations at neighboring locations into a single new variable. The weights matrix is central in this operation, since it identifies which observations need to be selected and if any weights need to be applied.</p>
+<div id="spatiallylaggedvars" class="section level3 hasAnchor" number="12.3.1">
+<h3><span class="header-section-number">12.3.1</span> Spatially Lagged Variables<a href="spatial-transformations.html#spatiallylaggedvars" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>With a neighbor structure defined by the non-zero elements of the
+spatial weights matrix <span class="math inline">\(\mathbf{W}\)</span>, a spatially lagged variable is a
+weighted sum or a weighted average of the neighboring values for that variable <span class="citation">(<a href="references.html#ref-Anselin:88">Anselin 1988</a>)</span>.
+In the typical notation,
+the spatial lag of <span class="math inline">\(y\)</span> is then expressed as <span class="math inline">\(Wy\)</span>.</p>
+<p>Formally, for observation <span class="math inline">\(i\)</span>,
+the spatial lag of <span class="math inline">\(y_i\)</span>, referred to as <span class="math inline">\([Wy]_i\)</span> (the variable <span class="math inline">\(Wy\)</span> observed for location
+<span class="math inline">\(i\)</span>) is:
+<span class="math display">\[\begin{equation*}
+[Wy]_i = w_{i1}y_1 + w_{i2}y_2 + \dots + w_{in}y_n,
+\end{equation*}\]</span>
+or,
+<span class="math display">\[\begin{equation*}
+[Wy]_i = \sum_{j=1}^n w_{ij}y_j,
+\end{equation*}\]</span>
+where the weights <span class="math inline">\(w_{ij}\)</span> consist of the elements of the
+<span class="math inline">\(i\)</span>-th row of the matrix <span class="math inline">\(\mathbf{W}\)</span>, matched up with the corresponding
+elements of the vector <span class="math inline">\(\mathbf{y}\)</span>.</p>
+<p>In other words, the spatial lag is a weighted
+sum of the values observed at neighboring locations, since the
+non-neighbors are not included (those <span class="math inline">\(j\)</span> for which <span class="math inline">\(w_{ij} =0\)</span>).
+Typically, the weights matrix is very sparse, so that only a small
+number of neighbors contribute to the weighted sum.
+For row-standardized weights, with <span class="math inline">\(\sum_j w_{ij} = 1\)</span>, the spatially
+lagged variable becomes
+a weighted average of the values at neighboring observations.</p>
+<p>In matrix notation, the spatial lag expression corresponds to
+the matrix product of the <span class="math inline">\(n \times n\)</span> spatial weights matrix <span class="math inline">\(\mathbf{W}\)</span>
+with the <span class="math inline">\(n \times 1\)</span> vector of observations <span class="math inline">\(\mathbf{y}\)</span>, or <span class="math inline">\(\mathbf{W \times y}\)</span>.
+The matrix <span class="math inline">\(\mathbf{W}\)</span> can therefore be considered to be the spatial
+lag <em>operator</em> on the vector <span class="math inline">\(\mathbf{y}\)</span>.</p>
+<p>In a number of applied situations, it may be useful to include the observation at
+location <span class="math inline">\(i\)</span>
+itself in the weights computation. This implies that the diagonal elements of the
+weights matrix must be non-zero, i.e., <span class="math inline">\(w_{ii} \neq 0\)</span>. Depending on the
+context, the diagonal elements may take on the value of one or equal a specific value, such as for
+kernel weights where the kernel function is applied to the diagonal.</p>
+<p>An alternative concept of spatial lag is the so-called <em>median spatial lag</em>. Instead of computing a (weighted) average of the neighboring observations, the median is selected.</p>
+<div id="creatingspatiallag" class="section level4 hasAnchor" number="12.3.1.1">
+<h4><span class="header-section-number">12.3.1.1</span> Creating a spatially lagged variable<a href="spatial-transformations.html#creatingspatiallag" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The spatial lag computation is part of the <strong>Calculator</strong> functionality associated with a data table (Section <a href="table-manipulations.html#calculator">2.4.2</a>). It is started from the menu as <strong>Table &gt; Calculator</strong>, or by right clicking in a table to bring up the list of options.</p>
+<p>The lag operation requires the <strong>Spatial Lag</strong> tab to be active. The <strong>Weight</strong>
+drop down list contains all the spatial weights available to the project,
+with the currently active weights listed. In the example illustrated in Figure <a href="spatial-transformations.html#fig:lagincalc">12.6</a>, a time-enabled version of the Italian bank data is used, with the 6 k-nearest neighbor weights after intersection with the 73 km distance band. The spatial weights are contained in the file <em>italy_banks_te_d73_k6.gal</em> (see Section <a href="manipulating-weights.html#weightsintersection">11.6.1</a>). The spatial lag
+operator will be applied to the variable <strong>SERV (2016)</strong>, i.e., the time enabled
+ratio of net interest income over total operating revenues in 2016.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:lagincalc"></span>
+<img src="pics/pics12/12_06_lagincalc.png" alt="Spatial lag in calculator" width="60%" />
+<p class="caption">
+Figure 12.6: Spatial lag in calculator
+</p>
+</div>
+<p>To compute the spatially lagged variable, first <strong>Add Variable</strong> is selected to create a name for the new variable, <strong>W1_SERV16</strong> in the example. At this point, the expression for the calculation of the lag is filled out in the box, listing both the weights and the original variable.</p>
+<p>The default option is to <strong>Use row-standardized weights</strong> without including the diagonal elements. The result is added to the data table, as shown in Figure <a href="spatial-transformations.html#fig:lagincalc">12.6</a>, in the column <strong>W1_SERV16</strong>.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:lagintable"></span>
+<img src="pics/pics12/12_07_lagintable.png" alt="Spatially lagged variables added to table" width="60%" />
+<p class="caption">
+Figure 12.7: Spatially lagged variables added to table
+</p>
+</div>
+<p>The file <em>italy_banks_te_d73_k6.gal</em> contains the neighbor list for the first observation, with <strong>idd = 1</strong>. These are the observations with <strong>idd</strong> equal to, respectively, <strong>64</strong>, <strong>95</strong>, <strong>96</strong>, <strong>267</strong>, <strong>272</strong> and <strong>309</strong> (corresponding to table rows 15, 41, 42, 167, 172, and 209). The value of <strong>SERV (2016)</strong> for the first observation is listed as <strong>0.640208</strong>. A look up in the data table reveals the values for the neighboring observations as <strong>0.560816</strong>, <strong>0.748250</strong>, <strong>0.659608</strong>, <strong>0.615197</strong>, <strong>0.349620</strong>, and <strong>0.701551</strong>.
+The average of these six values is <strong>0.605840</strong>, which is exactly the entry on the first row of the <strong>W1_SERV16</strong> column.</p>
+<p>As illustrated in Section <a href="manipulating-weights.html#weightsintersection">11.6.1</a>, the spatial weights intersection yields two isolates, observations with <strong>idd</strong> <strong>269</strong> (Valley of Aosta, row 169) and <strong>287</strong> (Sicily, row 187). Since a spatially lagged variable is undefined for an isolate (an actual computation would yield a value of zero), the corresponding entries in the table are empty. This avoids complications from mistakenly associating a value of zero in further calculations, such as in the computation of a spatial autocorrelation coefficient. The outcome of the empty entry is that the isolate observations are excluded from such computations.</p>
+<p>The effect of the spatial lag operation is a form of <em>smoothing</em> of the original data. The mean is roughly the same (the theoretic expected values are the same), e.g., 0.6363 for the original variable vs. 0.6378 for the spatial lag, but the standard deviation is much smaller, i.e., 0.0943 for the original vs. 0.0562 for the spatial lag. Similarly, a form of shrinking has occurred: the original variable has a minimum of 0.3496 and a maximum of 0.9143, whereas for the spatial lag this has narrowed to 0.5124 to 0.7478.<a href="#fn92" class="footnote-ref" id="fnref92"><sup>92</sup></a></p>
+<p>A measure of spatial correlation can be computed as the correlation between the original and the spatially lagged variable. Note that this is NOT the accepted notion of spatial autocorrelation considered in the literature (see Chapter <a href="CHglobalsa.html#CHglobalsa">13</a>). Nevertheless, as long as it is not interpreted in the context of a spatial autoregressive model, it remains a useful measure of the linear association between a variable and the average of its neighbors. In the example, this value is 0.350.<a href="#fn93" class="footnote-ref" id="fnref93"><sup>93</sup></a></p>
+</div>
+<div id="spatial-lag-as-a-sum-of-neighboring-values" class="section level4 hasAnchor" number="12.3.1.2">
+<h4><span class="header-section-number">12.3.1.2</span> Spatial lag as a sum of neighboring values<a href="spatial-transformations.html#spatial-lag-as-a-sum-of-neighboring-values" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Combining different settings for the <strong>row-standardized</strong> and <strong>Include diagonal</strong> options allows for other notions of spatially lagged variables to be implemented. For example, a spatial lag as a <em>sum</em> of the neighboring values is obtained by unsetting all options.</p>
+<p>The result is listed in column <strong>W2_SERV16</strong> of the table (Figure <a href="spatial-transformations.html#fig:lagintable">12.7</a>). For the first observation, the corresponding value is <strong>3.635042</strong>, which is the sum of the values for the six neighbors.</p>
+</div>
+<div id="medianspatiallag" class="section level4 hasAnchor" number="12.3.1.3">
+<h4><span class="header-section-number">12.3.1.3</span> Median spatial lag<a href="spatial-transformations.html#medianspatiallag" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The <strong>Median spatial lag</strong> is obtained by checking the corresponding box (the two other options become unavailable). In the example, there are six neighbors, so the median is computed as the midpoint between the third (0.615197) and fourth (0.659608) values in the ranked set, yielding <strong>0.637403</strong>. This is the entry in the first row of the <strong>W3_SERV16</strong> column in Figure <a href="spatial-transformations.html#fig:lagintable">12.7</a>.</p>
+</div>
+<div id="spatialwindowtransform" class="section level4 hasAnchor" number="12.3.1.4">
+<h4><span class="header-section-number">12.3.1.4</span> Spatial window transformations<a href="spatial-transformations.html#spatialwindowtransform" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>So far, the spatial lag operations did not include the observations itself. However, by checking the <strong>Include diagonal of weights matrix</strong> option, an average or sum over all observations in the <em>window</em> can be computed. The window consists of the observation and its neighbors, a notion commonly used in spatial smoothing operations (see also Section <a href="spatialratesmoothing.html#spatialratesmoothing">12.4</a>).</p>
+<p>The <em>spatial window average</em> is obtained by checking the <strong>Use row-standardized weights</strong> option. The result is an average of the seven values (observation and six neighbors), or
+<strong>0.610750</strong>, the entry in the first row of the <strong>W4_SERV16</strong> column in Figure <a href="spatial-transformations.html#fig:lagintable">12.7</a>.</p>
+<p>Unchecking the <strong>row-standardized</strong> box yields the <em>spatial window sum</em>. In the example, this is <strong>4.275251</strong>, listed under column <strong>W5_SERV16</strong>. Clearly, this is equivalent to the addition of <strong>SERV (2016)</strong> and <strong>W2_SERV16</strong>.</p>
+</div>
+</div>
+<div id="using-inverse-distance-weights---potential-measure" class="section level3 hasAnchor" number="12.3.2">
+<h3><span class="header-section-number">12.3.2</span> Using inverse distance weights - <em>potential</em> measure<a href="spatial-transformations.html#using-inverse-distance-weights---potential-measure" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The spatial lag operation can also be applied using spatial weights calculated from the
+inverse distance between observations. This, and kernel weights (Section <a href="spatial-transformations.html#kernelspatiallag">12.3.3</a>) are the only two instances in <code>GeoDa</code> where the actual values of the weights are used in an operation.</p>
+<p>As mentioned in Section <a href="spatial-weights-as-distance-functions.html#invdistanceweights">12.2.1</a>, the magnitude of the inverse distance weights depends on the units in which the coordinates are expressed. Therefore, care is needed before using inverse distance weights in spatial transformations. When the coordinates are expressed in feet or meters, as is often the case, the corresponding distances will tend to be very large. Consequently, the inverse distances may take on very small values, and any spatial lag could end up being essentially zero.</p>
+<p>Formally, the spatial lag operation uses the same principle as before. It amounts to a weighted average of the neighboring values,
+with the inverse distance function as the weights:
+<span class="math display">\[[Wy]_i = \sum_j \frac{y_j}{d_{ij}^\alpha},\]</span></p>
+<p>In practice, this calculation is typically combined with the application of a bandwidth. Such a bandwidth can be expressed in the form of a distance-band weight, with <span class="math inline">\(w_{ij} = 0\)</span> for <span class="math inline">\(d_{ij} &gt; \delta\)</span>, with <span class="math inline">\(\delta\)</span> as the bandwidth. Formally:
+<span class="math display">\[[Wy]_i = \sum_j \frac{w_{ij}y_j}{d_{ij}^\alpha},\]</span></p>
+<p>As mentioned, <span class="math inline">\(\alpha\)</span> is either 1 or 2. This expression for the spatial lag corresponds to the concept of <em>potential</em>, familiar in geo-marketing analyses.<a href="#fn94" class="footnote-ref" id="fnref94"><sup>94</sup></a>
+The potential is a measure of how accessible location <span class="math inline">\(i\)</span> is to opportunities located in the neighboring
+locations (as defined by the weights).</p>
+<div id="default-inverse-distance-weights-setting" class="section level4 hasAnchor" number="12.3.2.1">
+<h4><span class="header-section-number">12.3.2.1</span> Default inverse distance weights setting<a href="spatial-transformations.html#default-inverse-distance-weights-setting" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Spatial lags constructed from inverse distance weights operate in the same way as outlined in Section <a href="spatial-transformations.html#creatingspatiallag">12.3.1.1</a>. The default setting is that both <strong>Use row-standardized weights</strong> and <strong>Include diagonal of weights matrix</strong> are <strong>unchecked</strong>. This yields the potential measure as the sum of the neighboring values weighted by the inverse distance (or its square).</p>
+<p>Using the Italian bank example, with the inverse distance weights computed from the original coordinates (in meters) with a 6 nearest neighbor bandwidth requires the file <em>italy_banks_te_idk6.gwt</em>. The result is shown in the column <strong>ID_SERV16</strong> of Figure <a href="spatial-transformations.html#fig:invdintable">12.8</a>. The small values illustrate the problem associated with the original weights.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:invdintable"></span>
+<img src="pics/pics12/12_08_invdist_intable.png" alt="Variables computed with inverse distance weights added to table" width="60%" />
+<p class="caption">
+Figure 12.8: Variables computed with inverse distance weights added to table
+</p>
+</div>
+<p>Instead, with the inverse distances computed from coordinates in kilometers, the result in column <strong>IDK_SERV16</strong> follow (using the weights file <em>italy_banks_te_idk6km.gwt</em>), essentially a rescaled version of <strong>ID_SERV16</strong>.</p>
+<p>For example, for observation with <strong>idd=1</strong>, the inverse distance weights are given in the right-hand panel of Figure <a href="spatial-weights-as-distance-functions.html#fig:idgwt">12.2</a>. Combining these weights with the observation values for the neighbors listed in Section <a href="spatial-transformations.html#creatingspatiallag">12.3.1.1</a> yields the value <strong>0.093700</strong> given in the first row of the <strong>IDK_SERV16</strong> column.</p>
+</div>
+<div id="row-standardized-inverse-distance-weights" class="section level4 hasAnchor" number="12.3.2.2">
+<h4><span class="header-section-number">12.3.2.2</span> Row-standardized inverse distance weights<a href="spatial-transformations.html#row-standardized-inverse-distance-weights" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>The original inverse distance weights are highly scale dependent. This can be remedied by
+expressing them in row-standardized form. The spatial lag then takes on the standard meaning of a
+weighted average of the values at neighboring observations. The main difference with lags
+computed for connectivity weights is that now the neighbors are weighted differently. In contrast, for the straightforward spatial lag calculation of Section <a href="spatial-transformations.html#creatingspatiallag">12.3.1.1</a>, all the neighboring values get the same weight.</p>
+<p>The result of applying the row-standardized inverse distance weights from the right-hand panel in Figure <a href="spatial-weights-as-distance-functions.html#fig:idgwt">12.2</a> yields <strong>0.564334</strong>, listed on the first row of the
+<strong>IDR_SERV16</strong> column. In contrast to the calculation for the unstandardized inverse weights, the result is now
+similar in scale to the original variable (and similar to the spatial lags based on connectivity
+weights).</p>
+</div>
+<div id="spatial-window-inverse-distance-sum" class="section level4 hasAnchor" number="12.3.2.3">
+<h4><span class="header-section-number">12.3.2.3</span> Spatial window inverse distance sum<a href="spatial-transformations.html#spatial-window-inverse-distance-sum" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<p>Similar to the operations in Section <a href="spatial-transformations.html#spatialwindowtransform">12.3.1.4</a>, the inverse distance spatial lag can be computed for all observations in a <em>spatial window</em>. This is accomplished by checking the <strong>Include diagonal of weights matrix</strong> option.</p>
+<p>However, unlike what is the case for the simple spatial lag, there is a complication on how to deal with the diagonal value. In the simple spatial lag calculation this value is either added to the neighboring observations, or averaged with them. In the inverse distance case, the neighbors are weighted, but it is not obvious what the weight should be for the diagonal, since a distance of zero does not result in a valid weight.</p>
+<p>The convention taken in <code>GeoDa</code> is to keep the diagonal value unweighted. For example,
+without row-standardization, this amounts to:
+<span class="math display">\[[Wy]_i = y_i + \sum_j \frac{y_j}{d_{ij}^\alpha}.\]</span>
+Again, this can be implemented in combination with a specific bandwidth for the distance.</p>
+<p>In some contexts, this may be the desired result, but it is by no means the most intuitive
+concept. It should therefore be used sparingly and only when there is a strong substantive
+motivation. The corresponding result is listed in the first row of the <strong>IDS_SERV16</strong> column. It is simply the sum of the value for <strong>SERV (2016)</strong> and <strong>IDK_SERV16</strong>.</p>
+<p>The same problem occurs when using row-standardized weights. Again, in <code>GeoDa</code> the diagonal is unweighted, which yields:
+<span class="math display">\[[Wy]_i = y_i + \sum_j w_{ij} y_j.\]</span>
+where <span class="math inline">\(w_{ij}\)</span> are the row-standardized inverse distance weights.</p>
+</div>
+</div>
+<div id="kernelspatiallag" class="section level3 hasAnchor" number="12.3.3">
+<h3><span class="header-section-number">12.3.3</span> Using kernel weights<a href="spatial-transformations.html#kernelspatiallag" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Spatially lagged variables can also be computed from kernel weights. However, in this
+instance, only one of the options with respect to row-standardization and diagonal weights
+makes sense. Since the kernel weights are the result of a specific kernel function, they
+should not be altered. Also, each kernel function results in a specific value for the
+diagonal element, which should not be changed. As a result, the only viable option
+to create spatially lagged variables based on kernel weights is to have <em>no</em> row-standardization and to have the diagonal elements included. Other options are not available in the interface.</p>
+<p>Kernel-based spatially lagged variables correspond to a form of local smoothing. They can be used in specialized regression specifications, such as geographically weighted regression. The resulting spatially lagged variable is
+<span class="math display">\[[Wy]_i = \sum_j K_{ij} y_j,\]</span>
+When kernel weights are used, the concept of a bandwidth is already implemented in the calculation of the kernel.</p>
+<p>For the example using Epanechnikov weights with 6 nearest neighbors (<em>italy_banks_te_epa.kwt</em>), the result is listed on the first row of the column <strong>EPA_SERV16</strong>. The value of <strong>1.508157</strong> can be obtained by combining the weights in
+the right-hand panel of Figure <a href="spatial-weights-as-distance-functions.html#fig:kwtfile">12.5</a> with the neighboring observations
+from Section <a href="spatial-transformations.html#creatingspatiallag">12.3.1.1</a>).</p>
+<p>Creating spatially lagged variables and their use in spatial rate smoothing are the only operations in <code>GeoDa</code> where kernel weights can be applied. They are not available for the analysis of spatial autocorrelation.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="92">
+<li id="fn92"><p>The statistics can be readily obtained from a box plot of each variable.<a href="spatial-transformations.html#fnref92" class="footnote-back">↩︎</a></p></li>
+<li id="fn93"><p>The correlation can be calculated wit h the <strong>Data &gt; View Standardized Data</strong> in a scatter plot of <strong>SERV (2016)</strong> on <strong>W1_SERV16</strong>.<a href="spatial-transformations.html#fnref93" class="footnote-back">↩︎</a></p></li>
+<li id="fn94"><p>The concept of population potential goes back to the early literature in <em>social physics</em>, e.g., <span class="citation">Stewart (<a href="references.html#ref-Stewart:47">1947</a>)</span>. See also <span class="citation">C. Harris (<a href="references.html#ref-Harris:54">1954</a>)</span> and <span class="citation">Isard (<a href="references.html#ref-Isard:60">1960</a>)</span> for extensive early discussions.<a href="spatial-transformations.html#fnref94" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="spatial-weights-as-distance-functions.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="spatialratesmoothing.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": true,
+"facebook": false,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/yihui/bookdown-crc/edit/master/12.AdvancedWeights.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["geodabookvol1.pdf", "geodabookvol1.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
